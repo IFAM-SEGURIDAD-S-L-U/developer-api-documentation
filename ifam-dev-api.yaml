@@ -1,0 +1,1211 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: IFAM API
+  description: >-
+    Specification for IFAM's smartlock API
+  contact:
+    name: IFAM SEGURIDAD SL
+    url: http://www.ifam.es/
+
+paths:
+  /api/device/pairable:
+    post:
+      tags:
+        - Device
+      summary: Check if device is pairable
+      requestBody:
+        description: >
+          The `serialnumber` value to be used in this endpoint must be the 
+          one that can be found printed in the smartlock box. The  `mac` adress can be found performing the 
+          standard discovery of the lock described in the official documentation. FIXME
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pairableRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PairableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestDevicePairableFromSpec'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/pair/encrypted:
+    post:
+      tags:
+        - Device
+      summary: Pair device (encrypted)
+      description: >
+        Use this endpoint to pair a smartlock with the user account whose identity is specified
+        in the OpenID Connect ID token used for the request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pairEncryptedRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/pairDeviceEncryptedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestPairEncryptedFromSpec'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/user/encrypted:
+    get:
+      tags:
+        - Device
+      summary: Get devices by user (encrypted)
+      responses:
+        '200':
+          $ref: '#/components/responses/getUserDevicesEncryptedResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/{device-id}:
+    delete:
+      tags:
+        - Device
+      summary: Unpair device by ID
+      parameters:
+        - name: device-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteDeviceResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/{device-id}/encrypted:
+    get:
+      tags:
+        - Device
+      summary: Get device encrypted info
+      parameters:
+        - name: device-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/getDeviceEncryptedResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/key/{device-id}/encrypted:
+    get:
+      tags:
+        - Device
+      summary: Get device keys encrypted
+      parameters:
+        - name: device-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/getDeviceKeysEncryptedResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/other-key/{device-id}:
+    get:
+      tags:
+        - Device
+      summary: Get device other keys
+      parameters:
+        - name: device-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/getDeviceOtherKeysResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/missing-key/{device-id}:
+    get:
+      tags:
+        - Device
+      summary: Get missing keys for device
+      parameters:
+        - name: device-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/getDeviceMissingKeysResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/:
+    put:
+      tags:
+        - Device
+      summary: Update device
+      description: >
+        Updates device properties using its ID.
+
+        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
+
+        - The request body is invalid or missing required fields.
+
+        - The user does not have access to the specified device (or no device is paired).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateDeviceRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/updateDeviceResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/encrypted:
+    put:
+      tags:
+        - Device
+      summary: Update device (encrypted)
+      description: >
+        Updates device properties using its ID.
+
+        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
+
+        - The request body is invalid or missing required fields.
+
+        - The user does not have access to the specified device (or no device is paired).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateDeviceRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/updateDeviceResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/mac:
+    put:
+      tags:
+        - Device
+      summary: Set device MAC address
+      description: >
+        Updates device properties using its ID.
+
+        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
+
+        - The request body is invalid or missing required fields.
+
+        - The user does not have access to the specified device (or no device is paired).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setDeviceMacAdressRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/simpleSuccessResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/counter:
+    put:
+      tags:
+        - Device
+      summary: Set device counter
+      description: >
+        Updates device properties using its ID.
+
+        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
+
+        - The request body is invalid or missing required fields.
+
+        - The user does not have access to the specified device (or no device is paired).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               $ref: '#/components/schemas/setDeviceCounterRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/simpleSuccessResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/device/keys-check:
+    post:
+      tags:
+        - Device
+      summary: Check device keys
+      description: >
+        Updates device properties using its ID.
+
+        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
+
+        - The request body is invalid or missing required fields.
+
+        - The user does not have access to the specified device (or no device is paired).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/checkDeviceKeysRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/checkDeviceKeysResponse'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  responses:
+    getDeviceKeysEncryptedResponse:
+      description: Encrypted keys for the specified device
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              keys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Key'
+          example:
+            success: true
+            keys:
+              - role: admin
+                schedule: 7F0101000101000000
+                key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
+                phone: "+34666666666"
+                key_name: Admin Key
+                keystatus: created
+                type: mobile-app
+                usernum: U01
+                usernum_id: abcdef
+                schedulestatus: no-pending-schedule
+                counter: 1
+                mine: true
+                last_update: 1746619812243
+                user_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                display_name: user-01-A
+                userkey: e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
+                utopickey: 15d14e8fef9547a7
+
+    BadRequestPairEncryptedFromSpec:
+      description: >
+        Invalid request. The structure of this error is generated by Clojure Spec.
+        Multiple validation errors can be returned at once, depending on which fields in the request are invalid.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              problems:
+                type: array
+                description: List of validation failures
+                items:
+                  type: object
+                  properties:
+                    path:
+                      type: array
+                      items:
+                        type: string
+                    pred:
+                      type: array
+                      items: {}
+                    val:
+                      type: object
+                    via:
+                      type: array
+                      items:
+                        type: string
+                    in:
+                      type: array
+                      items:
+                        type: string
+              spec:
+                type: string
+              value:
+                type: object
+          example:
+            problems:
+              - path: [key, usernum]
+                pred:
+                  - clojure.core/fn
+                  - "%"
+                  - - clojure.core/re-matches
+                    - "U[0-9a-fA-F]{2}"
+                    - "%"
+                val: ""
+                via:
+                  - ifam.api.device/pair-device
+                  - ifam.api.device/key
+                  - ifam.domain.device/usernum
+                in: [key, usernum]
+              - path: [device, type]
+                pred:
+                  - clojure.core/fn
+                  - "%"
+                  - - clojure.core/some
+                    - "%"
+                    - ifam.api.device/types
+                val: INVALID
+                via:
+                  - ifam.api.device/pair-device
+                  - ifam.api.device/device
+                  - ifam.api.device/type
+                in: [device, type]
+            spec: ifam.api.device/pair-device
+            value:
+              key:
+                name: ""
+                keystatus: ""
+                usernum: ""
+                counter: -1
+                usernum_id: ""
+                userkey: ""
+              device:
+                timezone: ""
+                admincounter: -1
+                serialnumber: ""
+                name: ""
+                type: "INVALID"
+                adminkey: ""
+                mac: ""
+                utopickey: ""
+
+    getUserDevicesEncryptedResponse:
+      description: Response with the list of devices for the current user (encrypted)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success?:
+                type: boolean
+              devices:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+          examples:
+            noDevices:
+              summary: No devices paired
+              value:
+                success?: true
+                devices: []
+            withDevices:
+              summary: Devices paired
+              value:
+                success?: true
+                devices:
+                  - description: local-dev-device-01
+                    owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                    timezone: Europe/Madrid
+                    syncstatus: null
+                    admincounter: 15
+                    devicestatus: created
+                    semi_auto_mode: false
+                    first_pairing_at: 2019-10-10T10:00:00Z
+                    name: device-01
+                    last_sync_succeeded_at: null
+                    day_mode: "0000000000"
+                    type: DESI
+                    battery: -1
+                    state: close
+                    round_number: 2
+                    gateways: []
+                    auto_lock_time: 0
+                    last_update: 1746619812243
+                    daymodestatus: no-pending-daymode
+                    last_sync_attempted_at: null
+                    adminkey: 46a7b179eccd6a4d70304cde9005beea42f7a9c8e2f9a592d83a00c096661ac0e225fcb980ada09e75b80774dfb50641
+                    auto_lock_state: true
+                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    resbalon: 0
+                    motor_direction: 0
+                    serial_number: serial-number-1
+                    mac: AA:BB:CC:DD:EE:FF
+                    utopickey: 15d14e8fef9547a7
+                    buzzer_state: false
+
+    pairDeviceEncryptedResponse:
+      description: Response after attempting to pair device (encrypted)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success?:
+                type: boolean
+              reason:
+                type: string
+                nullable: true
+              device_id:
+                type: string
+                format: uuid
+              key_id:
+                type: string
+                format: uuid
+              userkey:
+                type: string
+              adminkey:
+                type: string
+          examples:
+            success:
+              summary: Device successfully paired
+              value:
+                success?: true
+                device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
+                userkey: c5bc3005936a72205de8b94e9dd8ca9edcefe1186b9af38995595fb2b1c3bf188e08d2956f0a9146321d633b0dc86473
+                adminkey: 865bdf3900ef0326ddf717f0f66c7d636073c59ce152c222bcf74e366cfc0ebfaee8205d27c68c2adc85f7c77ca6bcca
+            alreadyPaired:
+              summary: Device already paired
+              value:
+                success?: false
+                reason: device-already-paired
+                userkey: b99313528f13aa99578d50f1dbd6e6b57f94ef1773311ad845ae9b461e75af77e6d78b03e29decd9b8f904a8fa54d6c2
+                adminkey: 3f511e051b3aa73df5b12e3f4bf6631273f9106749cffe22c9adff35b099dd6d03c5d789f20c12d72b512768e23aba8f
+
+
+
+    getDeviceOtherKeysResponse:
+      description: Other keys for the specified device
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              other_keys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Key'
+          example:
+            success: true
+            other_keys: []
+
+    getDeviceMissingKeysResponse:
+      description: Missing keys for the specified device
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              missing_keys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MissingKey'
+          example:
+            success: true
+            missing_keys: []
+
+    getDeviceEncryptedResponse:
+      description: Response when retrieving encrypted device information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success?:
+                type: boolean
+              device:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  owner_id:
+                    type: string
+                    format: uuid
+                  timezone:
+                    type: string
+                  syncstatus:
+                    type: string
+                    nullable: true
+                  admincounter:
+                    type: integer
+                  devicestatus:
+                    type: string
+                  semi_auto_mode:
+                    type: boolean
+                  first_pairing_at:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  name:
+                    type: string
+                  last_sync_succeeded_at:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  day_mode:
+                    type: string
+                  type:
+                    type: string
+                  battery:
+                    type: integer
+                  state:
+                    type: string
+                  round_number:
+                    type: integer
+                  gateways:
+                    type: array
+                    items:
+                      type: object
+                  auto_lock_time:
+                    type: integer
+                  last_update:
+                    type: integer
+                  daymodestatus:
+                    type: string
+                  last_sync_attempted_at:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  adminkey:
+                    type: string
+                  auto_lock_state:
+                    type: boolean
+                  device_id:
+                    type: string
+                    format: uuid
+                  resbalon:
+                    type: integer
+                  motor_direction:
+                    type: integer
+                  serial_number:
+                    type: string
+                  mac:
+                    type: string
+                  utopickey:
+                    type: string
+                  buzzer_state:
+                    type: boolean
+          example:
+                success?: true
+                device:
+                    description: local-dev-device-01
+                    owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                    timezone: Europe/Madrid
+                    syncstatus: null
+                    admincounter: 15
+                    devicestatus: created
+                    semi_auto_mode: false
+                    first_pairing_at: "2019-10-10T10:00:00Z"
+                    name: device-01
+                    last_sync_succeeded_at: null
+                    day_mode: "0000000000"
+                    type: DESI
+                    battery: -1
+                    state: close
+                    round_number: 2
+                    gateways: []
+                    auto_lock_time: 0
+                    last_update: 1746619812243
+                    daymodestatus: no-pending-daymode
+                    last_sync_attempted_at: null
+                    adminkey: d9ebe546515e2839f9c4375266b65fd59a882d19a57e9443c3590f5a110050a719f8016033c5ec400eef3e6208ed4921
+                    auto_lock_state: true
+                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    resbalon: 0
+                    motor_direction: 0
+                    serial_number: serial-number-1
+                    mac: AA:BB:CC:DD:EE:FF
+                    utopickey: 15d14e8fef9547a7
+                    buzzer_state: false
+
+    updateDeviceResponse:
+      description: Device updated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              device:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  last_update:
+                    type: integer
+                  device_id:
+                    type: string
+                    format: uuid
+          example:
+            success: true
+            device:
+              name: Updated Device Name
+              last_update: 1746620109474
+              device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+
+    simpleSuccessResponse:
+      description: Update successful (MAC / counter)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+          example:
+            success?: true
+
+    checkDeviceKeysResponse:
+      description: Result of checking device keys
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: array
+                items:
+                  anyOf:
+                    - type: object
+                      properties:
+                        device_id:
+                          type: string
+                          format: uuid
+                        key_id:
+                          type: string
+                          format: uuid
+                        action:
+                          type: string
+                    - nullable: true
+          example:
+            success: true
+            data:
+              - null
+              - device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                key_id: 08f2b690-7648-4dd8-8b59-3067514f288f
+                action: create-missing-key
+
+    deleteDeviceResponse:
+      description: Device unpaired successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              device_id:
+                type: string
+                format: uuid
+          example:
+            success: true
+            device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+
+    PairableResponse:
+      description: Pairable check response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BasicResponse'
+
+          examples:
+            pairable:
+              summary: Device is pairable
+              value:
+                success?: true
+            alreadyPaired:
+              summary: Device already paired
+              value:
+                success?: false
+                reason: device-already-paired
+            unknownSerial:
+              summary: Serial number not found
+              value:
+                success?: false
+                reason: unkown-serial-number
+
+    Unauthorized:
+      description: Unauthorized - Missing or invalid OpenID Connect ID token.
+      content:
+        application/json:
+          example:
+            error: Authentication required
+
+    UserNotDeviceUser:
+      description: >
+        Forbidden – The user is not authorized to access the specified device.
+        This response may also appear if the request body is invalid or incomplete,
+        preventing the server from resolving which device is being referenced.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success?:
+                type: boolean
+              reason:
+                type: string
+          example:
+            success?: false
+            reason: user-is-not-device-user
+
+    BadRequestDevicePairableFromSpec:
+      description: >
+        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec).
+        The `problems` array contains detailed information about which keys were missing or invalid.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              problems:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    path:
+                      type: array
+                      items: {}
+                    pred:
+                      type: array
+                      items: {}
+                    val:
+                      type: object
+                    via:
+                      type: array
+                      items:
+                        type: string
+                    in:
+                      type: array
+                      items: {}
+              spec:
+                type: string
+              value:
+                type: object
+          example:
+            problems:
+              - path: []
+                pred:
+                  - clojure.core/fn
+                  - "%"
+                  - - clojure.core/contains?
+                    - "%"
+                    - mac
+                val: {}
+                via:
+                  - ifam.api.device/device-has-owner?
+                in: []
+              - path: []
+                pred:
+                  - clojure.core/fn
+                  - "%"
+                  - - clojure.core/contains?
+                    - "%"
+                    - serialnumber
+                val: {}
+                via:
+                  - ifam.api.device/device-has-owner?
+                in: []
+            spec: ifam.api.device/device-has-owner?
+            value: {}
+
+  schemas:
+    IdRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+        - id
+
+    pairableRequest:
+      type: object
+      properties:
+        serialnumber:
+          type: string
+          example: "serial-number-1"
+        mac:
+          type: string
+          example: "AA:BB:CC:DD:EE:FF"
+      required:
+        - serialnumber
+        - mac
+
+    checkDeviceKeysRequest:
+      type: object
+      properties:
+        device-id:
+          type: string
+        device-keys:
+          type: string
+        last-bluetooth-connection:
+          type: number
+      required:
+        - device-id
+        - device-keys
+        - last-bluetooth-connection
+
+    setDeviceCounterRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        admincounter:
+          type: number
+      required:
+        - id
+        - admincounter
+    setDeviceMacAdressRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        mac:
+          type: string
+      required:
+        - id
+        - mac
+
+    updateDeviceRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "device-id"
+        name:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+        last-update:
+          type: integer
+        timezone:
+          type: string
+        mac:
+          type: string
+        resbalon:
+          type: integer
+        round-number:
+          type: integer
+        buzzer-state:
+          type: boolean
+        motor-direction:
+          type: integer
+        auto-lock-state:
+          type: boolean
+        auto-lock-time:
+          type: integer
+        semi-auto-mode:
+          type: boolean
+        day-mode:
+          type: string
+        battery:
+          type: integer
+        daymodestatus:
+          type: string
+        syncstatus:
+          type: string
+        syncstatus-error:
+          type: string
+        daymodestatus-error:
+          type: string
+        first-pairing-at:
+          type: string
+          format: date-time
+      required:
+        - id
+
+    pairEncryptedRequest:
+      type: object
+      properties:
+        device:
+            $ref: '#/components/schemas/DeviceRequest'
+        key:
+            $ref: '#/components/schemas/KeyRequest'
+      required:
+        - device
+        - key
+
+    DeviceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: device-01
+        type:
+          type: string
+          example: DESI
+        utopickey:
+          type: string
+          example: 15d14e8fef9547a7
+        adminkey:
+          type: string
+          example: abcdef12
+        mac:
+          type: string
+          example: AA:BB:CC:DD:EE:FF
+        serialnumber:
+          type: string
+          example: serial-number-1
+        admincounter:
+          type: integer
+          example: 15
+        timezone:
+          type: string
+          example: Europe/Madrid
+        description:
+          type: string
+        first-pairing-at:
+          type: string
+          format: date-time
+        last-update:
+          type: integer
+      required:
+        - name
+        - type
+        - utopickey
+        - adminkey
+        - mac
+        - serialnumber
+        - admincounter
+        - timezone
+
+    KeyRequest:
+      type: object
+      properties:
+        userkey:
+          type: string
+          example: deadbeef
+        counter:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Admin Key
+        keystatus:
+          type: string
+          example: created
+        usernum:
+          type: string
+          example: U01
+        usernum-id:
+          type: string
+          example: abcdef
+        last-update:
+          type: integer
+      required:
+        - userkey
+        - counter
+        - name
+        - keystatus
+        - usernum
+        - usernum-id
+
+    Device:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        owner_id:
+          type: string
+          format: uuid
+        timezone:
+          type: string
+        type:
+          type: string
+          enum: [DESI]
+        mac:
+          type: string
+        serial_number:
+          type: string
+        admincounter:
+          type: integer
+        devicestatus:
+          type: string
+          enum: [created, no-id]
+        state:
+          type: string
+          enum: [open, close]
+        syncstatus:
+          type: string
+        semi_auto_mode:
+          type: boolean
+        auto_lock_time:
+          type: integer
+        auto_lock_state:
+          type: boolean
+        resbalon:
+          type: integer
+        round_number:
+          type: integer
+        motor_direction:
+          type: integer
+        buzzer_state:
+          type: boolean
+        first_pairing_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_update:
+          type: integer
+        last_sync_attempted_at:
+          type: string
+          format: date-time
+        last_sync_succeeded_at:
+          type: string
+          format: date-time
+          nullable: true
+        utopickey:
+          type: string
+        adminkey:
+          type: string
+        gateways:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gateway'
+
+    Gateway:
+      type: object
+      properties:
+        pairing_id:
+          type: string
+        pair_status:
+          type: string
+        gateway_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        ble_connection:
+          type: boolean
+        last_connection:
+          type: string
+          format: date-time
+        status:
+          type: string
+        gateway_battery:
+          type: integer
+        power_source:
+          type: string
+        mac:
+          type: string
+
+    Key:
+      type: object
+      properties:
+        key_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+        schedule:
+          type: string
+        phone:
+          type: string
+        key_name:
+          type: string
+        keystatus:
+          type: string
+        type:
+          type: string
+        usernum:
+          type: string
+        usernum_id:
+          type: string
+        schedulestatus:
+          type: string
+        counter:
+          type: integer
+        mine:
+          type: boolean
+        last_update:
+          type: integer
+        user_id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        userkey:
+          type: string
+        utopickey:
+          type: string
+
+    BasicResponse:
+      type: object
+      properties:
+        success?:
+          type: boolean
+
+    MissingKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+        usernum:
+          type: string
+        usernum_id:
+          type: string
+        keystatus:
+          type: string
+        last_update:
+          type: integer
+        type:
+          type: string
