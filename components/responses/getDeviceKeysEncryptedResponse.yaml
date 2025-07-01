@@ -1,0 +1,49 @@
+description: >
+  Response after attempting to retrieve the smartlock keys. If the `success?`
+  key is `true`, then the `userkey` and `adminkey` values of the smartlock (if
+  present) are returned encrypted with the algorithm described in the developer
+  documentation. FIXME(link,...). If the `success?` key is `false`, it returns
+  the `reason` key with details about the error.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+        keys:
+          type: array
+          items:
+            $ref: ../schemas/Key.yaml
+    examples:
+      successful:
+        summary: |
+          Successful smartlock keys retrieval
+        value:
+          success: true
+          keys:
+            - role: admin
+              schedule: 7F0101000101000000
+              key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
+              phone: '+34666666666'
+              key_name: Admin Key
+              keystatus: created
+              type: mobile-app
+              usernum: U01
+              usernum_id: abcdef
+              schedulestatus: no-pending-schedule
+              counter: 1
+              mine: true
+              last_update: 1746619812243
+              user_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+              device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+              display_name: user-01-A
+              userkey: >-
+                e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
+              utopickey: 15d14e8fef9547a7
+      error:
+        summary: |
+          Connection to the database failed 
+        value:
+          success?: false
+          reason: database-connection-failed

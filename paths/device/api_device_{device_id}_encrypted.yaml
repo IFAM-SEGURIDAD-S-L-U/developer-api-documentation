@@ -1,0 +1,24 @@
+get:
+  tags:
+    - Device
+  summary: Get smartlock info (encrypted)
+  description: >
+    Use this endpoint to get the details of the smartlock with the specified
+    `device_id`.
+  parameters:
+    - name: device_id
+      description: >
+        The `device_id` that was returned by `/api/device/pair/encrypted` when
+        the smartlock was paired.
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      $ref: ../../components/responses/getDeviceEncryptedResponse.yaml
+    '401':
+      $ref: ../../components/responses/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/UserNotDeviceUser.yaml

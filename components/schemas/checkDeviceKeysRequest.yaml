@@ -1,0 +1,12 @@
+type: object
+properties:
+  device_id:
+    type: string
+  device-keys:
+    type: string
+  last-bluetooth-connection:
+    type: number
+required:
+  - device_id
+  - device-keys
+  - last-bluetooth-connection

@@ -1,0 +1,41 @@
+type: object
+properties:
+  key_id:
+    type: string
+    format: uuid
+  role:
+    type: string
+  schedule:
+    type: string
+  phone:
+    type: string
+  key_name:
+    type: string
+  keystatus:
+    type: string
+  type:
+    type: string
+  usernum:
+    type: string
+  usernum_id:
+    type: string
+  schedulestatus:
+    type: string
+  counter:
+    type: integer
+  mine:
+    type: boolean
+  last_update:
+    type: integer
+  user_id:
+    type: string
+    format: uuid
+  device_id:
+    type: string
+    format: uuid
+  display_name:
+    type: string
+  userkey:
+    type: string
+  utopickey:
+    type: string

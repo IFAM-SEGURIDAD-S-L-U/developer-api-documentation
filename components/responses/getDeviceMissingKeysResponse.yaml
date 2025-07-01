@@ -1,0 +1,15 @@
+description: Missing keys for the specified device
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+        missing_keys:
+          type: array
+          items:
+            $ref: ../schemas/MissingKey.yaml
+    example:
+      success: true
+      missing_keys: []

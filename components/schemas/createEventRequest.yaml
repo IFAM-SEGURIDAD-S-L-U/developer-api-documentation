@@ -1,0 +1,36 @@
+type: object
+properties:
+  created_at:
+    type: string
+    format: date-time
+    example: 2025-05-21T12:00:00Z
+  type:
+    type: string
+    format: enum
+    example: open
+  device_id:
+    type: string
+    format: uuid
+    example: 17fbaba0-3098-44d2-8371-0454693ffb37
+  status:
+    type: string
+    format: enum
+    example: failed
+  source:
+    type: string
+    format: enum
+    example: device
+  details:
+    type: string
+  usernum:
+    type: integer
+  key_id:
+    type: string
+  other_key_id:
+    type: string
+required:
+  - created_at
+  - type
+  - device_id
+  - status
+  - source

@@ -1,0 +1,30 @@
+description: Result of checking device keys
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            anyOf:
+              - type: object
+                properties:
+                  device_id:
+                    type: string
+                    format: uuid
+                  key_id:
+                    type: string
+                    format: uuid
+                  action:
+                    type: string
+              - nullable: true
+    example:
+      success: true
+      data:
+        - null
+        - device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+          key_id: 08f2b690-7648-4dd8-8b59-3067514f288f
+          action: create-missing-key
