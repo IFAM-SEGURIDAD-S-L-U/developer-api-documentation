@@ -24,7 +24,7 @@ paths:
         '200':
           $ref: '#/components/responses/PairableResponse'
         '400':
-          $ref: '#/components/responses/BadRequestDevicePairableFromSpec'
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
   /api/device/pair/encrypted:
@@ -46,7 +46,7 @@ paths:
         '200':
           $ref: '#/components/responses/pairDeviceEncryptedResponse'
         '400':
-          $ref: '#/components/responses/BadRequestPairEncryptedFromSpec'
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
   /api/device/user/encrypted:
@@ -162,6 +162,8 @@ paths:
         Use this endpoint to get the missing keys of the smartlock with the specified `device_id`.
       parameters:
         - name: device_id
+          description: |
+                The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
           schema:
@@ -173,18 +175,17 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
-  /api/device/:
+  /api/device:
     put:
       tags:
         - Device
       summary: Update device
       description: |
-        Updates device properties using its ID.
-        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-        - The request body is invalid or missing required fields.
-        - The user does not have access to the specified device (or no device is paired).
+        Use this endpoint to update the smartlock properties using its `id`, that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
       requestBody:
         required: true
+        description: |
+          The body is a JSON object that can contain any of the keys defined in the schema.
         content:
           application/json:
             schema:
@@ -196,41 +197,43 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/device/encrypted:
     put:
       tags:
         - Device
       summary: Update device (encrypted)
       description: |
-        Updates device properties using its ID.
-        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-        - The request body is invalid or missing required fields.
-        - The user does not have access to the specified device (or no device is paired).
+        Use this endpoint to update the smartlock properties using its `id`, that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
       requestBody:
         required: true
+        description: |
+          The body is a JSON object that can contain any of the keys defined in the schema.
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/updateDeviceRequest'
       responses:
         '200':
-          $ref: '#/components/responses/updateDeviceResponse'
+          $ref: '#/components/responses/updateDeviceResponseEncrypted'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/device/mac:
     put:
       tags:
         - Device
       summary: Set device MAC address
       description: |
-        Updates device properties using its ID.
-        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-        - The request body is invalid or missing required fields.
-        - The user does not have access to the specified device (or no device is paired).
+        Use this endpoint to update the smartlock MAC address using its `id`, that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
       requestBody:
         required: true
+        description: |
+          The body is a JSON object that contains the `id` of the device and the new `mac` address.
         content:
           application/json:
             schema:
@@ -242,18 +245,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/device/counter:
     put:
       tags:
         - Device
       summary: Set device counter
       description: |
-        Updates device properties using its ID.
-        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-        - The request body is invalid or missing required fields.
-        - The user does not have access to the specified device (or no device is paired).
+        Use this endpoint to update the smartlock admin counter using its `id`, that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
       requestBody:
         required: true
+        description: |
+          The body is a JSON object that contains the `id` of the device and the new `admincounter` value.
         content:
           application/json:
             schema:
@@ -265,18 +269,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/device/keys-check:
     post:
       tags:
         - Device
       summary: Check device keys
       description: |
-        Updates device properties using its ID.
-        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-        - The request body is invalid or missing required fields.
-        - The user does not have access to the specified device (or no device is paired).
+         Use this endpoint to check the smartlock keys, for the smartlock identified by its `device_id` . It verifies that the keys provided in the request match the keys stored in the database for the specified device. And if they do not match, it synchronizes the keys stored in the database with the keys sent in the request.
       requestBody:
         required: true
+        description: |
+          `last_bluetooth_connection` contains the timestamp of the last Bluetooth connection to the device, in milliseconds since epoch. This is used to determine if the device has been recently connected. (FIXME for the documentation of syntax for `device_keys` with Usoa).
         content:
           application/json:
             schema:
@@ -288,6 +293,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/event/{device_id}:
     get:
       tags:
@@ -330,7 +337,7 @@ paths:
         '200':
           $ref: '#/components/responses/createEventResponse'
         '400':
-          $ref: '#/components/responses/BadRequestCreateEvent'
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -628,7 +635,7 @@ components:
       properties:
         id:
           type: string
-          example: device_id
+          format: uuid
         name:
           type: string
         description:
@@ -672,13 +679,24 @@ components:
           format: date-time
       required:
         - id
+      example:
+        id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+        name: device-01
+        description: local-dev-device-01
+        state: close
+        timezone: Europe/Madrid
+        day-mode: '0000000000'
+        battery: -1
+        daymodestatus: no-pending-daymode
     setDeviceMacAdressRequest:
       type: object
       properties:
         id:
           type: string
+          format: uuid
         mac:
           type: string
+          example: AA:BB:CC:DD:EE:FF
       required:
         - id
         - mac
@@ -687,6 +705,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         admincounter:
           type: number
       required:
@@ -697,14 +716,19 @@ components:
       properties:
         device_id:
           type: string
-        device-keys:
+          format: uuid
+        device_keys:
           type: string
-        last-bluetooth-connection:
+          pattern: "^(<U[0-9a-fA-F]{2}:[0-9a-fA-F]{6}>)+(<UEND>)$"
+          example:
+            "<U01:abcdef><U02:123456><UEND>"
+        last_bluetooth_connection:
           type: number
+          example: 1746619812243
       required:
         - device_id
-        - device-keys
-        - last-bluetooth-connection
+        - device_keys
+        - last_bluetooth_connection
     createEventRequest:
       type: object
       properties:
@@ -743,6 +767,64 @@ components:
         - status
         - source
   responses:
+    BadRequest:
+      description: |
+        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec). The `problems` array contains detailed information about which keys were missing or invalid.  Multiple validation errors can be returned at once, depending on which fields in  the request are invalid.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              problems:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    path:
+                      type: array
+                      items: { }
+                    pred:
+                      type: array
+                      items: { }
+                    val:
+                      type: object
+                    via:
+                      type: array
+                      items:
+                        type: string
+                    in:
+                      type: array
+                      items: { }
+              spec:
+                type: string
+              value:
+                type: object
+          example:
+            problems:
+              - path: [ ]
+                pred:
+                  - clojure.core/fn
+                  - '%'
+                  - - clojure.core/contains?
+                    - '%'
+                    - mac
+                val: { }
+                via:
+                  - ifam.api.device/device-has-owner?
+                in: [ ]
+              - path: [ ]
+                pred:
+                  - clojure.core/fn
+                  - '%'
+                  - - clojure.core/contains?
+                    - '%'
+                    - serialnumber
+                val: { }
+                via:
+                  - ifam.api.device/device-has-owner?
+                in: [ ]
+            spec: ifam.api.device/device-has-owner?
+            value: { }
     PairableResponse:
       description: Pairable check response
       content:
@@ -764,64 +846,6 @@ components:
               value:
                 success?: false
                 reason: unkown-serial-number
-    BadRequestDevicePairableFromSpec:
-      description: |
-        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec). The `problems` array contains detailed information about which keys were missing or invalid.  Multiple validation errors can be returned at once, depending on which fields in  the request are invalid.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              problems:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    path:
-                      type: array
-                      items: {}
-                    pred:
-                      type: array
-                      items: {}
-                    val:
-                      type: object
-                    via:
-                      type: array
-                      items:
-                        type: string
-                    in:
-                      type: array
-                      items: {}
-              spec:
-                type: string
-              value:
-                type: object
-          example:
-            problems:
-              - path: []
-                pred:
-                  - clojure.core/fn
-                  - '%'
-                  - - clojure.core/contains?
-                    - '%'
-                    - mac
-                val: {}
-                via:
-                  - ifam.api.device/device-has-owner?
-                in: []
-              - path: []
-                pred:
-                  - clojure.core/fn
-                  - '%'
-                  - - clojure.core/contains?
-                    - '%'
-                    - serialnumber
-                val: {}
-                via:
-                  - ifam.api.device/device-has-owner?
-                in: []
-            spec: ifam.api.device/device-has-owner?
-            value: {}
     Unauthorized:
       description: Unauthorized - Missing or invalid OpenID Connect ID token.
       content:
@@ -870,95 +894,6 @@ components:
               value:
                 succes?: false
                 reason: unknown-serial-number
-    BadRequestPairEncryptedFromSpec:
-      description: |
-        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec). The `problems` array contains detailed information about which keys were missing or invalid.  Multiple validation errors can be returned at once, depending on which fields in  the request are invalid.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              problems:
-                type: array
-                description: List of validation failures
-                items:
-                  type: object
-                  properties:
-                    path:
-                      type: array
-                      items:
-                        type: string
-                    pred:
-                      type: array
-                      items: {}
-                    val:
-                      type: object
-                    via:
-                      type: array
-                      items:
-                        type: string
-                    in:
-                      type: array
-                      items:
-                        type: string
-              spec:
-                type: string
-              value:
-                type: object
-          example:
-            problems:
-              - path:
-                  - key
-                  - usernum
-                pred:
-                  - clojure.core/fn
-                  - '%'
-                  - - clojure.core/re-matches
-                    - U[0-9a-fA-F]{2}
-                    - '%'
-                val: ''
-                via:
-                  - ifam.api.device/pair-device
-                  - ifam.api.device/key
-                  - ifam.domain.device/usernum
-                in:
-                  - key
-                  - usernum
-              - path:
-                  - device
-                  - type
-                pred:
-                  - clojure.core/fn
-                  - '%'
-                  - - clojure.core/some
-                    - '%'
-                    - ifam.api.device/types
-                val: INVALID
-                via:
-                  - ifam.api.device/pair-device
-                  - ifam.api.device/device
-                  - ifam.api.device/type
-                in:
-                  - device
-                  - type
-            spec: ifam.api.device/pair-device
-            value:
-              key:
-                name: ''
-                keystatus: ''
-                usernum: ''
-                counter: -1
-                usernum_id: ''
-                userkey: ''
-              device:
-                timezone: ''
-                admincounter: -1
-                serialnumber: ''
-                name: ''
-                type: INVALID
-                adminkey: ''
-                mac: ''
-                utopickey: ''
     getUserDevicesEncryptedResponse:
       description: |
         Response after attempting to get the list of smartlocks for the current user (encrypted) . If the `success?` key is `true`, then the  `userkey` and `adminkey` values of the smartlocks are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
@@ -1271,7 +1206,8 @@ components:
                 success?: false
                 reason: database-connection-failed
     getDeviceMissingKeysResponse:
-      description: Missing keys for the specified device
+      description: |
+        Response after attempting to retrieve the smartlock missing keys. If the `success?` key is `true`, then the list of existing missing keys is returned. If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -1283,11 +1219,33 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/MissingKey'
-          example:
-            success: true
-            missing_keys: []
+          examples:
+            there-are-no-missing-keys:
+              summary: There are no missing keys
+              value:
+                success: true
+                missing_keys: []
+            there-are-missing-keys:
+              summary: There are missing keys
+              value:
+                success?: true
+                missing_keys:
+                  - id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    usernum: U01
+                    usernum_id: abcdef
+                    keystatus: created
+                    last_update: 1746619812243
+                    type: mobile-app
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
     updateDeviceResponse:
-      description: Device updated successfully
+      description: |
+        Response after attempting to update the smartlock properties. If the `success?` key is `true`, then the list of updated properties is returned. If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -1305,14 +1263,59 @@ components:
                   device_id:
                     type: string
                     format: uuid
-          example:
-            success: true
-            device:
-              name: Updated Device Name
-              last_update: 1746620109474
-              device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+          examples:
+            successful:
+              summary: Device successfully updated
+              value:
+                success: true
+                device:
+                  name: Updated Device Name
+                  last_update: 1746620109474
+                  device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
+    updateDeviceResponseEncrypted:
+      description: |
+        Response after attempting to update the smartlock properties. If the `success?` key is `true`, then the list of updated properties is returned. If the `userkey` or `adminkey` values of the smartlock have been updated, they will be returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              device:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  last_update:
+                    type: integer
+                  device_id:
+                    type: string
+                    format: uuid
+          examples:
+            successful:
+              summary: Device successfully updated
+              value:
+                success: true
+                device:
+                  name: Updated Device Name
+                  last_update: 1746620109474
+                  device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                  userkey: e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
     simpleSuccessResponse:
-      description: Update successful (MAC / counter)
+      description: Update successful
       content:
         application/json:
           schema:
@@ -1323,13 +1326,13 @@ components:
           example:
             success?: true
     checkDeviceKeysResponse:
-      description: Result of checking device keys
+      description: Result of device keys verification. Indicates whether the provided keys match those stored in the database for the specified device. If they do not match, the stored keys are synchronized with those sent in the request. (FIXME check with Usoa)
       content:
         application/json:
           schema:
             type: object
             properties:
-              success:
+              success?:
                 type: boolean
               data:
                 type: array
@@ -1347,7 +1350,7 @@ components:
                           type: string
                     - nullable: true
           example:
-            success: true
+            success?: true
             data:
               - null
               - device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
@@ -1395,36 +1398,6 @@ components:
               value:
                 success?: false
                 reason: already-exists
-    BadRequestCreateEvent:
-      description: Bad request due to missing required fields
-      content:
-        application/json:
-          examples:
-            missingType:
-              summary: Missing required field `type`
-              value:
-                problems:
-                  - path: []
-                    pred:
-                      - clojure.core/fn
-                      - - '%'
-                      - - clojure.core/contains?
-                        - '%'
-                        - type
-                    val:
-                      device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-                      source: device
-                      status: failed
-                      created_at: '2025-05-21T12:00:00Z'
-                    via:
-                      - ifam.api.event/create-event
-                    in: []
-                spec: ifam.api.event/create-event
-                value:
-                  device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-                  source: device
-                  status: failed
-                  created_at: '2025-05-21T12:00:00Z'
     InternalServerError:
       description: Internal server error due to missing `source` field (bug in validation)
       content:
