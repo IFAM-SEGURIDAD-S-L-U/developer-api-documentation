@@ -13,7 +13,7 @@ paths:
     post:
       tags:
         - Device
-      summary: Check if device is pairable
+      summary: Check if smartlock is pairable
       requestBody:
         description: >
           The `serialnumber` value to be used in this endpoint must be the 
@@ -36,11 +36,13 @@ paths:
     post:
       tags:
         - Device
-      summary: Pair device (encrypted)
+      summary: Pair smartlock (encrypted)
       description: >
         Use this endpoint to pair a smartlock with the user account whose identity is specified
         in the OpenID Connect ID token used for the request.
       requestBody:
+        description: >
+          The pairing operation performs two actions. On the one hand, it stores the values passed in the `device` key as the smartlock's current status. On the other hand, it creates a smartlock admin key using the values passed in the `key` key, and assigns that key to the user account whose identity is specified in the OpenID Connect ID token.
         required: true
         content:
           application/json:
@@ -58,24 +60,36 @@ paths:
     get:
       tags:
         - Device
-      summary: Get devices by user (encrypted)
+      summary: Get user smartlocks (encrypted)
+      description: >
+        Use this endpoint to get a list of the smartlocks owned by the user account whose identity is specified in the OpenID Connect ID token used for the request. 
+        unknownSerial:
+              summary: Serial number not found
+              value:
+                success?: false
+                reason: unkown-serial-number
       responses:
         '200':
           $ref: '#/components/responses/getUserDevicesEncryptedResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/device/{device-id}:
+  /api/device/{device_id}:
     delete:
       tags:
         - Device
-      summary: Unpair device by ID
+      summary: Unpair smartlock by ID
+      description: >
+        Use this endpoint to unpair a smartlock, with the specified `device_id`, from the user the user account whose identity is specified in the OpenID Connect ID token used for the request.
       parameters:
-        - name: device-id
+        - name: device_id
+          description: >
+            The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           $ref: '#/components/responses/deleteDeviceResponse'
@@ -84,17 +98,22 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/device/{device-id}/encrypted:
+  /api/device/{device_id}/encrypted:
     get:
       tags:
         - Device
-      summary: Get device encrypted info
+      summary: Get smartlock info (encrypted)
+      description: >
+         Use this endpoint to get the details of the smartlock with the specified `device_id`.
       parameters:
-        - name: device-id
+        - name: device_id
+          description: >
+            The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           $ref: '#/components/responses/getDeviceEncryptedResponse'
@@ -103,17 +122,22 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/device/key/{device-id}/encrypted:
+  /api/device/key/{device_id}/encrypted:
     get:
       tags:
         - Device
-      summary: Get device keys encrypted
+      summary: Get smartlock keys (encrypted)
+      description: >
+         Use this endpoint to get the keys of the smartlock with the specified `device_id`.      
       parameters:
-        - name: device-id
+        - name: device_id
+          description:  >
+            The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           $ref: '#/components/responses/getDeviceKeysEncryptedResponse'
@@ -122,17 +146,22 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/device/other-key/{device-id}:
+  /api/device/other-key/{device_id}:
     get:
       tags:
         - Device
-      summary: Get device other keys
+      summary: Get smartlock other keys
+      description: >
+         Use this endpoint to get the other keys of the smartlock with the specified `device_id`.      
       parameters:
-        - name: device-id
+        - name: device_id
+          description: >
+            The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           $ref: '#/components/responses/getDeviceOtherKeysResponse'
@@ -141,13 +170,15 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/device/missing-key/{device-id}:
+  /api/device/missing-key/{device_id}:
     get:
       tags:
         - Device
       summary: Get missing keys for device
+      description: >
+         Use this endpoint to get the missing keys of the smartlock with the specified `device_id`.      
       parameters:
-        - name: device-id
+        - name: device_id
           in: path
           required: true
           schema:
@@ -298,7 +329,8 @@ paths:
 components:
   responses:
     getDeviceKeysEncryptedResponse:
-      description: Encrypted keys for the specified device
+      description: >
+        Response after attempting to retrieve the smartlock keys. If the `success?` key is `true`, then the `userkey` and `adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -310,32 +342,44 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Key'
-          example:
-            success: true
-            keys:
-              - role: admin
-                schedule: 7F0101000101000000
-                key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
-                phone: "+34666666666"
-                key_name: Admin Key
-                keystatus: created
-                type: mobile-app
-                usernum: U01
-                usernum_id: abcdef
-                schedulestatus: no-pending-schedule
-                counter: 1
-                mine: true
-                last_update: 1746619812243
-                user_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
-                device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-                display_name: user-01-A
-                userkey: e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
-                utopickey: 15d14e8fef9547a7
+          examples:
+            successful:
+              summary: >
+                Successful smartlock keys retrieval
+              value:
+                success: true
+                keys:
+                  - role: admin
+                    schedule: 7F0101000101000000
+                    key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
+                    phone: "+34666666666"
+                    key_name: Admin Key
+                    keystatus: created
+                    type: mobile-app
+                    usernum: U01
+                    usernum_id: abcdef
+                    schedulestatus: no-pending-schedule
+                    counter: 1
+                    mine: true
+                    last_update: 1746619812243
+                    user_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    display_name: user-01-A
+                    userkey: e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
+                    utopickey: 15d14e8fef9547a7
+            error:  
+              summary: > 
+                  Connection to the database failed 
+              value:
+                  success?: false
+                  reason: "database-connection-failed"
 
     BadRequestPairEncryptedFromSpec:
       description: >
-        Invalid request. The structure of this error is generated by Clojure Spec.
-        Multiple validation errors can be returned at once, depending on which fields in the request are invalid.
+        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec).
+        The `problems` array contains detailed information about which keys were missing or invalid. 
+        Multiple validation errors can be returned at once, depending on which fields in 
+        the request are invalid.
       content:
         application/json:
           schema:
@@ -416,7 +460,9 @@ components:
                 utopickey: ""
 
     getUserDevicesEncryptedResponse:
-      description: Response with the list of devices for the current user (encrypted)
+      description: >
+        Response after attempting to get the list of smartlocks for the current user (encrypted) .
+        If the `success?` key is `true`, then the  `userkey` and `adminkey` values of the smartlocks are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error. 
       content:
         application/json:
           schema:
@@ -468,9 +514,19 @@ components:
                     mac: AA:BB:CC:DD:EE:FF
                     utopickey: 15d14e8fef9547a7
                     buzzer_state: false
+            unknownSerial:
+              summary: Serial number not found
+              value:
+                success?: false
+                reason: unkown-serial-number
 
     pairDeviceEncryptedResponse:
-      description: Response after attempting to pair device (encrypted)
+      description: >
+        Response after attempting to pair smartlock (encrypted). If the `success?` key is `true`, 
+        then the `userkey` and 
+        `adminkey` values are returned encrypted with the algorithm described 
+        in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns 
+        the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -505,13 +561,15 @@ components:
               value:
                 success?: false
                 reason: device-already-paired
-                userkey: b99313528f13aa99578d50f1dbd6e6b57f94ef1773311ad845ae9b461e75af77e6d78b03e29decd9b8f904a8fa54d6c2
-                adminkey: 3f511e051b3aa73df5b12e3f4bf6631273f9106749cffe22c9adff35b099dd6d03c5d789f20c12d72b512768e23aba8f
-
-
+            unkonwSerialNumber:
+              summary: Serial number not found
+              value:
+                succes?: false
+                reason: unknown-serial-number
 
     getDeviceOtherKeysResponse:
-      description: Other keys for the specified device
+      description: >
+        Response after attempting to retrieve the smartlock other keys. If the `success?` key is `true`, then the userkey` and adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -522,10 +580,47 @@ components:
               other_keys:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Key'
-          example:
-            success: true
-            other_keys: []
+                  $ref: '#/components/schemas/OtherKey'
+          examples:
+            no-other-keys: 
+              summary: >
+                There are no other keys
+              value:
+                success: true
+                other_keys: []
+            other-keys:
+              summary: >
+                There are other keys
+              value:
+                success?: true
+                other_keys:
+                  - id: fc927b85-1b82-4954-af22-965e36270193
+                    device_id: fc927b85-1b82-4954-af22-965e36270122
+                    type: remote
+                    name: hugos remote key
+                    keystatus: created
+                    usernum: U2F
+                    schedule: 7F0101000101000000
+                    schedulestatus: no-pending-schedule
+                    last_update: 1750179263000
+                    usernum_id: 000000
+                  - id: fc927b85-1b82-4954-af22-965e36270193
+                    device_id: fc927b85-1b82-4954-af22-965e36270122
+                    type: remote
+                    name: hugos remote key
+                    keystatus: created
+                    usernum: U2F
+                    schedule: 7F0101000101000000
+                    schedulestatus: no-pending-schedule
+                    last_update: 1750179263000
+                    usernum_id: 000000
+            error:
+              summary: > 
+                Connection to the database failed 
+              value:
+                success?: false
+                reason: "database-connection-failed"
+              
 
     getDeviceMissingKeysResponse:
       description: Missing keys for the specified device
@@ -545,7 +640,8 @@ components:
             missing_keys: []
 
     getDeviceEncryptedResponse:
-      description: Response when retrieving encrypted device information
+      description: >
+          Response after attempting to retrieve the smartlock information. If the `success?` key is `true`, then the `userkey` and `adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -625,7 +721,11 @@ components:
                     type: string
                   buzzer_state:
                     type: boolean
-          example:
+          examples:
+            successful:
+              summary: >
+                Successful retrieval
+              value:
                 success?: true
                 device:
                     description: local-dev-device-01
@@ -657,6 +757,12 @@ components:
                     mac: AA:BB:CC:DD:EE:FF
                     utopickey: 15d14e8fef9547a7
                     buzzer_state: false
+            error:
+              summary: > 
+                Connection to the database failed 
+              value:
+                success?: false
+                reason: "database-connection-failed"
 
     updateDeviceResponse:
       description: Device updated successfully
@@ -729,7 +835,7 @@ components:
                 action: create-missing-key
 
     deleteDeviceResponse:
-      description: Device unpaired successfully
+      description: Smartlock unpaired successfully
       content:
         application/json:
           schema:
@@ -776,9 +882,9 @@ components:
 
     UserNotDeviceUser:
       description: >
-        Forbidden – The user is not authorized to access the specified device.
+        Forbidden – The user is not authorized to access the specified smartlock.
         This response may also appear if the request body is invalid or incomplete,
-        preventing the server from resolving which device is being referenced.
+        preventing the server from resolving which smartlock is being referenced.
       content:
         application/json:
           schema:
@@ -791,11 +897,12 @@ components:
           example:
             success?: false
             reason: user-is-not-device-user
-
     BadRequestDevicePairableFromSpec:
       description: >
         Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec).
-        The `problems` array contains detailed information about which keys were missing or invalid.
+        The `problems` array contains detailed information about which keys were missing or invalid. 
+        Multiple validation errors can be returned at once, depending on which fields in 
+        the request are invalid.
       content:
         application/json:
           schema:
@@ -878,14 +985,14 @@ components:
     checkDeviceKeysRequest:
       type: object
       properties:
-        device-id:
+        device_id:
           type: string
         device-keys:
           type: string
         last-bluetooth-connection:
           type: number
       required:
-        - device-id
+        - device_id
         - device-keys
         - last-bluetooth-connection
 
@@ -915,7 +1022,7 @@ components:
       properties:
         id:
           type: string
-          example: "device-id"
+          example: "device_id"
         name:
           type: string
         description:
@@ -1209,3 +1316,38 @@ components:
           type: integer
         type:
           type: string
+          
+    OtherKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        name:
+          type: string
+        keystatus:
+          type: string
+        usernum:
+          type: string
+        schedule:
+          type: string
+        schedulestatus:
+          type: string
+        last_update:
+          type: integer
+        usernum_id:
+          type: string
+        
+       
+        
+        
+       
+          
+          
+          
+          
