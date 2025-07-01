@@ -2,12 +2,10 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: IFAM API
-  description: >-
-    Specification for IFAM's smartlock API
+  description: Specification for IFAM's smartlock API
   contact:
     name: IFAM SEGURIDAD SL
     url: http://www.ifam.es/
-
 paths:
   /api/device/pairable:
     post:
@@ -15,10 +13,8 @@ paths:
         - Device
       summary: Check if smartlock is pairable
       requestBody:
-        description: >
-          The `serialnumber` value to be used in this endpoint must be the 
-          one that can be found printed in the smartlock box. The  `mac` adress can be found performing the 
-          standard discovery of the lock described in the official documentation. FIXME
+        description: |
+          The `serialnumber` value to be used in this endpoint must be the  one that can be found printed in the smartlock box. The  `mac` adress can be found performing the  standard discovery of the lock described in the official documentation. FIXME
         required: true
         content:
           application/json:
@@ -31,17 +27,15 @@ paths:
           $ref: '#/components/responses/BadRequestDevicePairableFromSpec'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
   /api/device/pair/encrypted:
     post:
       tags:
         - Device
       summary: Pair smartlock (encrypted)
-      description: >
-        Use this endpoint to pair a smartlock with the user account whose identity is specified
-        in the OpenID Connect ID token used for the request.
+      description: |
+        Use this endpoint to pair a smartlock with the user account whose identity is specified in the OpenID Connect ID token used for the request.
       requestBody:
-        description: >
+        description: |
           The pairing operation performs two actions. On the one hand, it stores the values passed in the `device` key as the smartlock's current status. On the other hand, it creates a smartlock admin key using the values passed in the `key` key, and assigns that key to the user account whose identity is specified in the OpenID Connect ID token.
         required: true
         content:
@@ -55,35 +49,28 @@ paths:
           $ref: '#/components/responses/BadRequestPairEncryptedFromSpec'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
   /api/device/user/encrypted:
     get:
       tags:
         - Device
       summary: Get user smartlocks (encrypted)
-      description: >
-        Use this endpoint to get a list of the smartlocks owned by the user account whose identity is specified in the OpenID Connect ID token used for the request. 
-        unknownSerial:
-              summary: Serial number not found
-              value:
-                success?: false
-                reason: unkown-serial-number
+      description: |
+        Use this endpoint to get a list of the smartlocks owned by the user account whose identity is specified in the OpenID Connect ID token used for the request.
       responses:
         '200':
           $ref: '#/components/responses/getUserDevicesEncryptedResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
   /api/device/{device_id}:
     delete:
       tags:
         - Device
       summary: Unpair smartlock by ID
-      description: >
+      description: |
         Use this endpoint to unpair a smartlock, with the specified `device_id`, from the user the user account whose identity is specified in the OpenID Connect ID token used for the request.
       parameters:
         - name: device_id
-          description: >
+          description: |
             The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
@@ -93,21 +80,20 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/deleteDeviceResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/{device_id}/encrypted:
     get:
       tags:
         - Device
       summary: Get smartlock info (encrypted)
-      description: >
-         Use this endpoint to get the details of the smartlock with the specified `device_id`.
+      description: |
+        Use this endpoint to get the details of the smartlock with the specified `device_id`.
       parameters:
         - name: device_id
-          description: >
+          description: |
             The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
@@ -117,21 +103,20 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/getDeviceEncryptedResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/key/{device_id}/encrypted:
     get:
       tags:
         - Device
       summary: Get smartlock keys (encrypted)
-      description: >
-         Use this endpoint to get the keys of the smartlock with the specified `device_id`.      
+      description: |
+        Use this endpoint to get the keys of the smartlock with the specified `device_id`.
       parameters:
         - name: device_id
-          description:  >
+          description: |
             The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
@@ -141,21 +126,20 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/getDeviceKeysEncryptedResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/other-key/{device_id}:
     get:
       tags:
         - Device
       summary: Get smartlock other keys
-      description: >
-         Use this endpoint to get the other keys of the smartlock with the specified `device_id`.      
+      description: |
+        Use this endpoint to get the other keys of the smartlock with the specified `device_id`.
       parameters:
         - name: device_id
-          description: >
+          description: |
             The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
           in: path
           required: true
@@ -165,18 +149,17 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/getDeviceOtherKeysResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/missing-key/{device_id}:
     get:
       tags:
         - Device
       summary: Get missing keys for device
-      description: >
-         Use this endpoint to get the missing keys of the smartlock with the specified `device_id`.      
+      description: |
+        Use this endpoint to get the missing keys of the smartlock with the specified `device_id`.
       parameters:
         - name: device_id
           in: path
@@ -186,23 +169,19 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/getDeviceMissingKeysResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/:
     put:
       tags:
         - Device
       summary: Update device
-      description: >
+      description: |
         Updates device properties using its ID.
-
         Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-
         - The request body is invalid or missing required fields.
-
         - The user does not have access to the specified device (or no device is paired).
       requestBody:
         required: true
@@ -213,23 +192,19 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/updateDeviceResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/encrypted:
     put:
       tags:
         - Device
       summary: Update device (encrypted)
-      description: >
+      description: |
         Updates device properties using its ID.
-
         Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-
         - The request body is invalid or missing required fields.
-
         - The user does not have access to the specified device (or no device is paired).
       requestBody:
         required: true
@@ -240,23 +215,19 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/updateDeviceResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/mac:
     put:
       tags:
         - Device
       summary: Set device MAC address
-      description: >
+      description: |
         Updates device properties using its ID.
-
         Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-
         - The request body is invalid or missing required fields.
-
         - The user does not have access to the specified device (or no device is paired).
       requestBody:
         required: true
@@ -267,50 +238,42 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/simpleSuccessResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/counter:
     put:
       tags:
         - Device
       summary: Set device counter
-      description: >
+      description: |
         Updates device properties using its ID.
-
         Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-
         - The request body is invalid or missing required fields.
-
         - The user does not have access to the specified device (or no device is paired).
       requestBody:
         required: true
         content:
           application/json:
             schema:
-               $ref: '#/components/schemas/setDeviceCounterRequest'
+              $ref: '#/components/schemas/setDeviceCounterRequest'
       responses:
         '200':
           $ref: '#/components/responses/simpleSuccessResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
   /api/device/keys-check:
     post:
       tags:
         - Device
       summary: Check device keys
-      description: >
+      description: |
         Updates device properties using its ID.
-
         Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-
         - The request body is invalid or missing required fields.
-
         - The user does not have access to the specified device (or no device is paired).
       requestBody:
         required: true
@@ -321,65 +284,489 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/checkDeviceKeysResponse'
-        '403':
-          $ref: '#/components/responses/UserNotDeviceUser'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+  /api/event/{device_id}:
+    get:
+      tags:
+        - Event
+      summary: Gets all the events from a device.
+      description: |
+        Based on a device-id, returns a list with all the events related to the device-id.
 
+         Note: This endpoint returns a `403 Forbidden` with `reason:
+         user-is-not-device-user` if:
+
+         - The user does not have access to the specified device (or no device is
+         paired).
+         -The device-id is not valid or does not exist.
+
+      responses:
+        '200':
+          $ref: '#/components/responses/getEventResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+  /api/event:
+    post:
+      tags:
+        - Event
+      summary: Create an event
+      description: |
+        Create an event associated to the device ID
+        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
+        - The request body is invalid or missing required fields.
+        - The user does not have access to the specified device (or no device is paired).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createEventRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/createEventResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestCreateEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/UserNotDeviceUser'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
+  schemas:
+    pairableRequest:
+      type: object
+      properties:
+        serialnumber:
+          type: string
+          example: serial-number-1
+        mac:
+          type: string
+          example: AA:BB:CC:DD:EE:FF
+      required:
+        - serialnumber
+        - mac
+    BasicResponse:
+      type: object
+      properties:
+        success?:
+          type: boolean
+    DeviceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: device-01
+        type:
+          type: string
+          example: DESI
+        utopickey:
+          type: string
+          example: 15d14e8fef9547a7
+        adminkey:
+          type: string
+          example: abcdef12
+        mac:
+          type: string
+          example: AA:BB:CC:DD:EE:FF
+        serialnumber:
+          type: string
+          example: serial-number-1
+        admincounter:
+          type: integer
+          example: 15
+        timezone:
+          type: string
+          example: Europe/Madrid
+        description:
+          type: string
+        first-pairing-at:
+          type: string
+          format: date-time
+        last-update:
+          type: integer
+      required:
+        - name
+        - type
+        - utopickey
+        - adminkey
+        - mac
+        - serialnumber
+        - admincounter
+        - timezone
+    KeyRequest:
+      type: object
+      properties:
+        userkey:
+          type: string
+          example: deadbeef
+        counter:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Admin Key
+        keystatus:
+          type: string
+          example: created
+        usernum:
+          type: string
+          example: U01
+        usernum-id:
+          type: string
+          example: abcdef
+        last-update:
+          type: integer
+      required:
+        - userkey
+        - counter
+        - name
+        - keystatus
+        - usernum
+        - usernum-id
+    pairEncryptedRequest:
+      type: object
+      properties:
+        device:
+          $ref: '#/components/schemas/DeviceRequest'
+        key:
+          $ref: '#/components/schemas/KeyRequest'
+      required:
+        - device
+        - key
+    Gateway:
+      type: object
+      properties:
+        pairing_id:
+          type: string
+        pair_status:
+          type: string
+        gateway_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        ble_connection:
+          type: boolean
+        last_connection:
+          type: string
+          format: date-time
+        status:
+          type: string
+        gateway_battery:
+          type: integer
+        power_source:
+          type: string
+        mac:
+          type: string
+    Device:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        owner_id:
+          type: string
+          format: uuid
+        timezone:
+          type: string
+        type:
+          type: string
+          enum:
+            - DESI
+        mac:
+          type: string
+        serial_number:
+          type: string
+        admincounter:
+          type: integer
+        devicestatus:
+          type: string
+          enum:
+            - created
+            - no-id
+        state:
+          type: string
+          enum:
+            - open
+            - close
+        syncstatus:
+          type: string
+        semi_auto_mode:
+          type: boolean
+        auto_lock_time:
+          type: integer
+        auto_lock_state:
+          type: boolean
+        resbalon:
+          type: integer
+        round_number:
+          type: integer
+        motor_direction:
+          type: integer
+        buzzer_state:
+          type: boolean
+        first_pairing_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_update:
+          type: integer
+        last_sync_attempted_at:
+          type: string
+          format: date-time
+        last_sync_succeeded_at:
+          type: string
+          format: date-time
+          nullable: true
+        utopickey:
+          type: string
+        adminkey:
+          type: string
+        gateways:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gateway'
+    Key:
+      type: object
+      properties:
+        key_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+        schedule:
+          type: string
+        phone:
+          type: string
+        key_name:
+          type: string
+        keystatus:
+          type: string
+        type:
+          type: string
+        usernum:
+          type: string
+        usernum_id:
+          type: string
+        schedulestatus:
+          type: string
+        counter:
+          type: integer
+        mine:
+          type: boolean
+        last_update:
+          type: integer
+        user_id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        userkey:
+          type: string
+        utopickey:
+          type: string
+    OtherKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        name:
+          type: string
+        keystatus:
+          type: string
+        usernum:
+          type: string
+        schedule:
+          type: string
+        schedulestatus:
+          type: string
+        last_update:
+          type: integer
+        usernum_id:
+          type: string
+    MissingKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+        usernum:
+          type: string
+        usernum_id:
+          type: string
+        keystatus:
+          type: string
+        last_update:
+          type: integer
+        type:
+          type: string
+    updateDeviceRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: device_id
+        name:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+        last-update:
+          type: integer
+        timezone:
+          type: string
+        mac:
+          type: string
+        resbalon:
+          type: integer
+        round-number:
+          type: integer
+        buzzer-state:
+          type: boolean
+        motor-direction:
+          type: integer
+        auto-lock-state:
+          type: boolean
+        auto-lock-time:
+          type: integer
+        semi-auto-mode:
+          type: boolean
+        day-mode:
+          type: string
+        battery:
+          type: integer
+        daymodestatus:
+          type: string
+        syncstatus:
+          type: string
+        syncstatus-error:
+          type: string
+        daymodestatus-error:
+          type: string
+        first-pairing-at:
+          type: string
+          format: date-time
+      required:
+        - id
+    setDeviceMacAdressRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        mac:
+          type: string
+      required:
+        - id
+        - mac
+    setDeviceCounterRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        admincounter:
+          type: number
+      required:
+        - id
+        - admincounter
+    checkDeviceKeysRequest:
+      type: object
+      properties:
+        device_id:
+          type: string
+        device-keys:
+          type: string
+        last-bluetooth-connection:
+          type: number
+      required:
+        - device_id
+        - device-keys
+        - last-bluetooth-connection
+    createEventRequest:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-05-21T12:00:00Z'
+        type:
+          type: string
+          format: enum
+          example: open
+        device_id:
+          type: string
+          format: uuid
+          example: 17fbaba0-3098-44d2-8371-0454693ffb37
+        status:
+          type: string
+          format: enum
+          example: failed
+        source:
+          type: string
+          format: enum
+          example: device
+        details:
+          type: string
+        usernum:
+          type: integer
+        key_id:
+          type: string
+        other_key_id:
+          type: string
+      required:
+        - created_at
+        - type
+        - device_id
+        - status
+        - source
   responses:
-    getDeviceKeysEncryptedResponse:
-      description: >
-        Response after attempting to retrieve the smartlock keys. If the `success?` key is `true`, then the `userkey` and `adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+    PairableResponse:
+      description: Pairable check response
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-              keys:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Key'
+            $ref: '#/components/schemas/BasicResponse'
           examples:
-            successful:
-              summary: >
-                Successful smartlock keys retrieval
+            pairable:
+              summary: Device is pairable
               value:
-                success: true
-                keys:
-                  - role: admin
-                    schedule: 7F0101000101000000
-                    key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
-                    phone: "+34666666666"
-                    key_name: Admin Key
-                    keystatus: created
-                    type: mobile-app
-                    usernum: U01
-                    usernum_id: abcdef
-                    schedulestatus: no-pending-schedule
-                    counter: 1
-                    mine: true
-                    last_update: 1746619812243
-                    user_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
-                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-                    display_name: user-01-A
-                    userkey: e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
-                    utopickey: 15d14e8fef9547a7
-            error:  
-              summary: > 
-                  Connection to the database failed 
+                success?: true
+            alreadyPaired:
+              summary: Device already paired
               value:
-                  success?: false
-                  reason: "database-connection-failed"
-
-    BadRequestPairEncryptedFromSpec:
-      description: >
-        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec).
-        The `problems` array contains detailed information about which keys were missing or invalid. 
-        Multiple validation errors can be returned at once, depending on which fields in 
-        the request are invalid.
+                success?: false
+                reason: device-already-paired
+            unknownSerial:
+              summary: Serial number not found
+              value:
+                success?: false
+                reason: unkown-serial-number
+    BadRequestDevicePairableFromSpec:
+      description: |
+        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec). The `problems` array contains detailed information about which keys were missing or invalid.  Multiple validation errors can be returned at once, depending on which fields in  the request are invalid.
       content:
         application/json:
           schema:
@@ -387,14 +774,12 @@ components:
             properties:
               problems:
                 type: array
-                description: List of validation failures
                 items:
                   type: object
                   properties:
                     path:
                       type: array
-                      items:
-                        type: string
+                      items: {}
                     pred:
                       type: array
                       items: {}
@@ -406,127 +791,46 @@ components:
                         type: string
                     in:
                       type: array
-                      items:
-                        type: string
+                      items: {}
               spec:
                 type: string
               value:
                 type: object
           example:
             problems:
-              - path: [key, usernum]
+              - path: []
                 pred:
                   - clojure.core/fn
-                  - "%"
-                  - - clojure.core/re-matches
-                    - "U[0-9a-fA-F]{2}"
-                    - "%"
-                val: ""
+                  - '%'
+                  - - clojure.core/contains?
+                    - '%'
+                    - mac
+                val: {}
                 via:
-                  - ifam.api.device/pair-device
-                  - ifam.api.device/key
-                  - ifam.domain.device/usernum
-                in: [key, usernum]
-              - path: [device, type]
+                  - ifam.api.device/device-has-owner?
+                in: []
+              - path: []
                 pred:
                   - clojure.core/fn
-                  - "%"
-                  - - clojure.core/some
-                    - "%"
-                    - ifam.api.device/types
-                val: INVALID
+                  - '%'
+                  - - clojure.core/contains?
+                    - '%'
+                    - serialnumber
+                val: {}
                 via:
-                  - ifam.api.device/pair-device
-                  - ifam.api.device/device
-                  - ifam.api.device/type
-                in: [device, type]
-            spec: ifam.api.device/pair-device
-            value:
-              key:
-                name: ""
-                keystatus: ""
-                usernum: ""
-                counter: -1
-                usernum_id: ""
-                userkey: ""
-              device:
-                timezone: ""
-                admincounter: -1
-                serialnumber: ""
-                name: ""
-                type: "INVALID"
-                adminkey: ""
-                mac: ""
-                utopickey: ""
-
-    getUserDevicesEncryptedResponse:
-      description: >
-        Response after attempting to get the list of smartlocks for the current user (encrypted) .
-        If the `success?` key is `true`, then the  `userkey` and `adminkey` values of the smartlocks are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error. 
+                  - ifam.api.device/device-has-owner?
+                in: []
+            spec: ifam.api.device/device-has-owner?
+            value: {}
+    Unauthorized:
+      description: Unauthorized - Missing or invalid OpenID Connect ID token.
       content:
         application/json:
-          schema:
-            type: object
-            properties:
-              success?:
-                type: boolean
-              devices:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Device'
-          examples:
-            noDevices:
-              summary: No devices paired
-              value:
-                success?: true
-                devices: []
-            withDevices:
-              summary: Devices paired
-              value:
-                success?: true
-                devices:
-                  - description: local-dev-device-01
-                    owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
-                    timezone: Europe/Madrid
-                    syncstatus: null
-                    admincounter: 15
-                    devicestatus: created
-                    semi_auto_mode: false
-                    first_pairing_at: 2019-10-10T10:00:00Z
-                    name: device-01
-                    last_sync_succeeded_at: null
-                    day_mode: "0000000000"
-                    type: DESI
-                    battery: -1
-                    state: close
-                    round_number: 2
-                    gateways: []
-                    auto_lock_time: 0
-                    last_update: 1746619812243
-                    daymodestatus: no-pending-daymode
-                    last_sync_attempted_at: null
-                    adminkey: 46a7b179eccd6a4d70304cde9005beea42f7a9c8e2f9a592d83a00c096661ac0e225fcb980ada09e75b80774dfb50641
-                    auto_lock_state: true
-                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-                    resbalon: 0
-                    motor_direction: 0
-                    serial_number: serial-number-1
-                    mac: AA:BB:CC:DD:EE:FF
-                    utopickey: 15d14e8fef9547a7
-                    buzzer_state: false
-            unknownSerial:
-              summary: Serial number not found
-              value:
-                success?: false
-                reason: unkown-serial-number
-
+          example:
+            error: Authentication required
     pairDeviceEncryptedResponse:
-      description: >
-        Response after attempting to pair smartlock (encrypted). If the `success?` key is `true`, 
-        then the `userkey` and 
-        `adminkey` values are returned encrypted with the algorithm described 
-        in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns 
-        the `reason` key with details about the error.
+      description: |
+        Response after attempting to pair smartlock (encrypted). If the `success?` key is `true`,  then the `userkey` and  `adminkey` values are returned encrypted with the algorithm described  in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns  the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -566,64 +870,156 @@ components:
               value:
                 succes?: false
                 reason: unknown-serial-number
-
-    getDeviceOtherKeysResponse:
-      description: >
-        Response after attempting to retrieve the smartlock other keys. If the `success?` key is `true`, then the userkey` and adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+    BadRequestPairEncryptedFromSpec:
+      description: |
+        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec). The `problems` array contains detailed information about which keys were missing or invalid.  Multiple validation errors can be returned at once, depending on which fields in  the request are invalid.
       content:
         application/json:
           schema:
             type: object
             properties:
-              success:
+              problems:
+                type: array
+                description: List of validation failures
+                items:
+                  type: object
+                  properties:
+                    path:
+                      type: array
+                      items:
+                        type: string
+                    pred:
+                      type: array
+                      items: {}
+                    val:
+                      type: object
+                    via:
+                      type: array
+                      items:
+                        type: string
+                    in:
+                      type: array
+                      items:
+                        type: string
+              spec:
+                type: string
+              value:
+                type: object
+          example:
+            problems:
+              - path:
+                  - key
+                  - usernum
+                pred:
+                  - clojure.core/fn
+                  - '%'
+                  - - clojure.core/re-matches
+                    - U[0-9a-fA-F]{2}
+                    - '%'
+                val: ''
+                via:
+                  - ifam.api.device/pair-device
+                  - ifam.api.device/key
+                  - ifam.domain.device/usernum
+                in:
+                  - key
+                  - usernum
+              - path:
+                  - device
+                  - type
+                pred:
+                  - clojure.core/fn
+                  - '%'
+                  - - clojure.core/some
+                    - '%'
+                    - ifam.api.device/types
+                val: INVALID
+                via:
+                  - ifam.api.device/pair-device
+                  - ifam.api.device/device
+                  - ifam.api.device/type
+                in:
+                  - device
+                  - type
+            spec: ifam.api.device/pair-device
+            value:
+              key:
+                name: ''
+                keystatus: ''
+                usernum: ''
+                counter: -1
+                usernum_id: ''
+                userkey: ''
+              device:
+                timezone: ''
+                admincounter: -1
+                serialnumber: ''
+                name: ''
+                type: INVALID
+                adminkey: ''
+                mac: ''
+                utopickey: ''
+    getUserDevicesEncryptedResponse:
+      description: |
+        Response after attempting to get the list of smartlocks for the current user (encrypted) . If the `success?` key is `true`, then the  `userkey` and `adminkey` values of the smartlocks are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success?:
                 type: boolean
-              other_keys:
+              devices:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OtherKey'
+                  $ref: '#/components/schemas/Device'
           examples:
-            no-other-keys: 
-              summary: >
-                There are no other keys
-              value:
-                success: true
-                other_keys: []
-            other-keys:
-              summary: >
-                There are other keys
+            noDevices:
+              summary: No devices paired
               value:
                 success?: true
-                other_keys:
-                  - id: fc927b85-1b82-4954-af22-965e36270193
-                    device_id: fc927b85-1b82-4954-af22-965e36270122
-                    type: remote
-                    name: hugos remote key
-                    keystatus: created
-                    usernum: U2F
-                    schedule: 7F0101000101000000
-                    schedulestatus: no-pending-schedule
-                    last_update: 1750179263000
-                    usernum_id: 000000
-                  - id: fc927b85-1b82-4954-af22-965e36270193
-                    device_id: fc927b85-1b82-4954-af22-965e36270122
-                    type: remote
-                    name: hugos remote key
-                    keystatus: created
-                    usernum: U2F
-                    schedule: 7F0101000101000000
-                    schedulestatus: no-pending-schedule
-                    last_update: 1750179263000
-                    usernum_id: 000000
-            error:
-              summary: > 
-                Connection to the database failed 
+                devices: []
+            withDevices:
+              summary: Devices paired
+              value:
+                success?: true
+                devices:
+                  - description: local-dev-device-01
+                    owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                    timezone: Europe/Madrid
+                    syncstatus: null
+                    admincounter: 15
+                    devicestatus: created
+                    semi_auto_mode: false
+                    first_pairing_at: '2019-10-10T10:00:00Z'
+                    name: device-01
+                    last_sync_succeeded_at: null
+                    day_mode: '0000000000'
+                    type: DESI
+                    battery: -1
+                    state: close
+                    round_number: 2
+                    gateways: []
+                    auto_lock_time: 0
+                    last_update: 1746619812243
+                    daymodestatus: no-pending-daymode
+                    last_sync_attempted_at: null
+                    adminkey: 46a7b179eccd6a4d70304cde9005beea42f7a9c8e2f9a592d83a00c096661ac0e225fcb980ada09e75b80774dfb50641
+                    auto_lock_state: true
+                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    resbalon: 0
+                    motor_direction: 0
+                    serial_number: serial-number-1
+                    mac: AA:BB:CC:DD:EE:FF
+                    utopickey: 15d14e8fef9547a7
+                    buzzer_state: false
+            unknownSerial:
+              summary: Serial number not found
               value:
                 success?: false
-                reason: "database-connection-failed"
-              
-
-    getDeviceMissingKeysResponse:
-      description: Missing keys for the specified device
+                reason: unkown-serial-number
+    deleteDeviceResponse:
+      description: Smartlock unpaired successfully
       content:
         application/json:
           schema:
@@ -631,17 +1027,30 @@ components:
             properties:
               success:
                 type: boolean
-              missing_keys:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MissingKey'
+              device_id:
+                type: string
+                format: uuid
           example:
             success: true
-            missing_keys: []
-
+            device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+    UserNotDeviceUser:
+      description: |
+        Forbidden – The user is not authorized to access the specified smartlock. This response may also appear if the request body is invalid or incomplete, preventing the server from resolving which smartlock is being referenced.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success?:
+                type: boolean
+              reason:
+                type: string
+          example:
+            success?: false
+            reason: user-is-not-device-user
     getDeviceEncryptedResponse:
-      description: >
-          Response after attempting to retrieve the smartlock information. If the `success?` key is `true`, then the `userkey` and `adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+      description: |
+        Response after attempting to retrieve the smartlock information. If the `success?` key is `true`, then the `userkey` and `adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           schema:
@@ -723,47 +1132,160 @@ components:
                     type: boolean
           examples:
             successful:
-              summary: >
+              summary: |
                 Successful retrieval
               value:
                 success?: true
                 device:
-                    description: local-dev-device-01
-                    owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
-                    timezone: Europe/Madrid
-                    syncstatus: null
-                    admincounter: 15
-                    devicestatus: created
-                    semi_auto_mode: false
-                    first_pairing_at: "2019-10-10T10:00:00Z"
-                    name: device-01
-                    last_sync_succeeded_at: null
-                    day_mode: "0000000000"
-                    type: DESI
-                    battery: -1
-                    state: close
-                    round_number: 2
-                    gateways: []
-                    auto_lock_time: 0
-                    last_update: 1746619812243
-                    daymodestatus: no-pending-daymode
-                    last_sync_attempted_at: null
-                    adminkey: d9ebe546515e2839f9c4375266b65fd59a882d19a57e9443c3590f5a110050a719f8016033c5ec400eef3e6208ed4921
-                    auto_lock_state: true
-                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-                    resbalon: 0
-                    motor_direction: 0
-                    serial_number: serial-number-1
-                    mac: AA:BB:CC:DD:EE:FF
-                    utopickey: 15d14e8fef9547a7
-                    buzzer_state: false
+                  description: local-dev-device-01
+                  owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                  timezone: Europe/Madrid
+                  syncstatus: null
+                  admincounter: 15
+                  devicestatus: created
+                  semi_auto_mode: false
+                  first_pairing_at: '2019-10-10T10:00:00Z'
+                  name: device-01
+                  last_sync_succeeded_at: null
+                  day_mode: '0000000000'
+                  type: DESI
+                  battery: -1
+                  state: close
+                  round_number: 2
+                  gateways: []
+                  auto_lock_time: 0
+                  last_update: 1746619812243
+                  daymodestatus: no-pending-daymode
+                  last_sync_attempted_at: null
+                  adminkey: d9ebe546515e2839f9c4375266b65fd59a882d19a57e9443c3590f5a110050a719f8016033c5ec400eef3e6208ed4921
+                  auto_lock_state: true
+                  device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                  resbalon: 0
+                  motor_direction: 0
+                  serial_number: serial-number-1
+                  mac: AA:BB:CC:DD:EE:FF
+                  utopickey: 15d14e8fef9547a7
+                  buzzer_state: false
             error:
-              summary: > 
-                Connection to the database failed 
+              summary: |
+                Connection to the database failed
               value:
                 success?: false
-                reason: "database-connection-failed"
-
+                reason: database-connection-failed
+    getDeviceKeysEncryptedResponse:
+      description: |
+        Response after attempting to retrieve the smartlock keys. If the `success?` key is `true`, then the `userkey` and `adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              keys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Key'
+          examples:
+            successful:
+              summary: |
+                Successful smartlock keys retrieval
+              value:
+                success: true
+                keys:
+                  - role: admin
+                    schedule: 7F0101000101000000
+                    key_id: 51d59aa8-71b3-49c5-afb8-44915a4d4acb
+                    phone: '+34666666666'
+                    key_name: Admin Key
+                    keystatus: created
+                    type: mobile-app
+                    usernum: U01
+                    usernum_id: abcdef
+                    schedulestatus: no-pending-schedule
+                    counter: 1
+                    mine: true
+                    last_update: 1746619812243
+                    user_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+                    device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    display_name: user-01-A
+                    userkey: e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
+                    utopickey: 15d14e8fef9547a7
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
+    getDeviceOtherKeysResponse:
+      description: |
+        Response after attempting to retrieve the smartlock other keys. If the `success?` key is `true`, then the userkey` and adminkey` values of the smartlock (if present) are returned encrypted with the algorithm described in the developer documentation. FIXME(link,...). If the `success?` key is `false`, it returns the `reason` key with details about the error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              other_keys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OtherKey'
+          examples:
+            no-other-keys:
+              summary: |
+                There are no other keys
+              value:
+                success: true
+                other_keys: []
+            other-keys:
+              summary: |
+                There are other keys
+              value:
+                success?: true
+                other_keys:
+                  - id: fc927b85-1b82-4954-af22-965e36270193
+                    device_id: fc927b85-1b82-4954-af22-965e36270122
+                    type: remote
+                    name: hugos remote key
+                    keystatus: created
+                    usernum: U2F
+                    schedule: 7F0101000101000000
+                    schedulestatus: no-pending-schedule
+                    last_update: 1750179263000
+                    usernum_id: 0
+                  - id: fc927b85-1b82-4954-af22-965e36270193
+                    device_id: fc927b85-1b82-4954-af22-965e36270122
+                    type: remote
+                    name: hugos remote key
+                    keystatus: created
+                    usernum: U2F
+                    schedule: 7F0101000101000000
+                    schedulestatus: no-pending-schedule
+                    last_update: 1750179263000
+                    usernum_id: 0
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
+    getDeviceMissingKeysResponse:
+      description: Missing keys for the specified device
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              missing_keys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MissingKey'
+          example:
+            success: true
+            missing_keys: []
     updateDeviceResponse:
       description: Device updated successfully
       content:
@@ -789,7 +1311,6 @@ components:
               name: Updated Device Name
               last_update: 1746620109474
               device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-
     simpleSuccessResponse:
       description: Update successful (MAC / counter)
       content:
@@ -801,7 +1322,6 @@ components:
                 type: boolean
           example:
             success?: true
-
     checkDeviceKeysResponse:
       description: Result of checking device keys
       content:
@@ -833,521 +1353,85 @@ components:
               - device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
                 key_id: 08f2b690-7648-4dd8-8b59-3067514f288f
                 action: create-missing-key
-
-    deleteDeviceResponse:
-      description: Smartlock unpaired successfully
+    getEventResponse:
+      description: Successful response when querying device events
       content:
         application/json:
-          schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-              device_id:
-                type: string
-                format: uuid
-          example:
-            success: true
-            device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-
-    PairableResponse:
-      description: Pairable check response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BasicResponse'
-
           examples:
-            pairable:
-              summary: Device is pairable
+            noEvents:
+              summary: Device has no associated events
               value:
                 success?: true
-            alreadyPaired:
-              summary: Device already paired
+                events: []
+            withEvents:
+              summary: Device has one associated event
+              value:
+                success?: true
+                events:
+                  - device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                    type: open
+                    source: device
+                    status: completed
+                    id: fafab218-d335-42e3-bc32-d1e35151458a
+                    created_at: '2025-05-21T12:00:00Z'
+    createEventResponse:
+      description: Response after creating an event
+      content:
+        application/json:
+          examples:
+            eventCreated:
+              summary: Event successfully created
+              value:
+                success?: true
+                event:
+                  device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                  type: open
+                  source: device
+                  status: failed
+                  id: 14a6e4ff-ccac-4945-9cd5-6d9659e10b01
+                  created_at: '2025-05-21T12:00:00Z'
+            alreadyExists:
+              summary: Event already exists
               value:
                 success?: false
-                reason: device-already-paired
-            unknownSerial:
-              summary: Serial number not found
+                reason: already-exists
+    BadRequestCreateEvent:
+      description: Bad request due to missing required fields
+      content:
+        application/json:
+          examples:
+            missingType:
+              summary: Missing required field `type`
               value:
-                success?: false
-                reason: unkown-serial-number
-
-    Unauthorized:
-      description: Unauthorized - Missing or invalid OpenID Connect ID token.
-      content:
-        application/json:
-          example:
-            error: Authentication required
-
-    UserNotDeviceUser:
-      description: >
-        Forbidden – The user is not authorized to access the specified smartlock.
-        This response may also appear if the request body is invalid or incomplete,
-        preventing the server from resolving which smartlock is being referenced.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              success?:
-                type: boolean
-              reason:
-                type: string
-          example:
-            success?: false
-            reason: user-is-not-device-user
-    BadRequestDevicePairableFromSpec:
-      description: >
-        Invalid request. This endpoint uses [Clojure Spec validations](https://clojure.org/guides/spec).
-        The `problems` array contains detailed information about which keys were missing or invalid. 
-        Multiple validation errors can be returned at once, depending on which fields in 
-        the request are invalid.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              problems:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    path:
-                      type: array
-                      items: {}
+                problems:
+                  - path: []
                     pred:
-                      type: array
-                      items: {}
+                      - clojure.core/fn
+                      - - '%'
+                      - - clojure.core/contains?
+                        - '%'
+                        - type
                     val:
-                      type: object
+                      device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                      source: device
+                      status: failed
+                      created_at: '2025-05-21T12:00:00Z'
                     via:
-                      type: array
-                      items:
-                        type: string
-                    in:
-                      type: array
-                      items: {}
-              spec:
-                type: string
+                      - ifam.api.event/create-event
+                    in: []
+                spec: ifam.api.event/create-event
+                value:
+                  device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+                  source: device
+                  status: failed
+                  created_at: '2025-05-21T12:00:00Z'
+    InternalServerError:
+      description: Internal server error due to missing `source` field (bug in validation)
+      content:
+        application/json:
+          examples:
+            missingSource:
+              summary: Missing `source` field causes server error
               value:
-                type: object
-          example:
-            problems:
-              - path: []
-                pred:
-                  - clojure.core/fn
-                  - "%"
-                  - - clojure.core/contains?
-                    - "%"
-                    - mac
-                val: {}
-                via:
-                  - ifam.api.device/device-has-owner?
-                in: []
-              - path: []
-                pred:
-                  - clojure.core/fn
-                  - "%"
-                  - - clojure.core/contains?
-                    - "%"
-                    - serialnumber
-                val: {}
-                via:
-                  - ifam.api.device/device-has-owner?
-                in: []
-            spec: ifam.api.device/device-has-owner?
-            value: {}
-
-  schemas:
-    IdRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-        - id
-
-    pairableRequest:
-      type: object
-      properties:
-        serialnumber:
-          type: string
-          example: "serial-number-1"
-        mac:
-          type: string
-          example: "AA:BB:CC:DD:EE:FF"
-      required:
-        - serialnumber
-        - mac
-
-    checkDeviceKeysRequest:
-      type: object
-      properties:
-        device_id:
-          type: string
-        device-keys:
-          type: string
-        last-bluetooth-connection:
-          type: number
-      required:
-        - device_id
-        - device-keys
-        - last-bluetooth-connection
-
-    setDeviceCounterRequest:
-      type: object
-      properties:
-        id:
-          type: string
-        admincounter:
-          type: number
-      required:
-        - id
-        - admincounter
-    setDeviceMacAdressRequest:
-      type: object
-      properties:
-        id:
-          type: string
-        mac:
-          type: string
-      required:
-        - id
-        - mac
-
-    updateDeviceRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "device_id"
-        name:
-          type: string
-        description:
-          type: string
-        state:
-          type: string
-        last-update:
-          type: integer
-        timezone:
-          type: string
-        mac:
-          type: string
-        resbalon:
-          type: integer
-        round-number:
-          type: integer
-        buzzer-state:
-          type: boolean
-        motor-direction:
-          type: integer
-        auto-lock-state:
-          type: boolean
-        auto-lock-time:
-          type: integer
-        semi-auto-mode:
-          type: boolean
-        day-mode:
-          type: string
-        battery:
-          type: integer
-        daymodestatus:
-          type: string
-        syncstatus:
-          type: string
-        syncstatus-error:
-          type: string
-        daymodestatus-error:
-          type: string
-        first-pairing-at:
-          type: string
-          format: date-time
-      required:
-        - id
-
-    pairEncryptedRequest:
-      type: object
-      properties:
-        device:
-            $ref: '#/components/schemas/DeviceRequest'
-        key:
-            $ref: '#/components/schemas/KeyRequest'
-      required:
-        - device
-        - key
-
-    DeviceRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          example: device-01
-        type:
-          type: string
-          example: DESI
-        utopickey:
-          type: string
-          example: 15d14e8fef9547a7
-        adminkey:
-          type: string
-          example: abcdef12
-        mac:
-          type: string
-          example: AA:BB:CC:DD:EE:FF
-        serialnumber:
-          type: string
-          example: serial-number-1
-        admincounter:
-          type: integer
-          example: 15
-        timezone:
-          type: string
-          example: Europe/Madrid
-        description:
-          type: string
-        first-pairing-at:
-          type: string
-          format: date-time
-        last-update:
-          type: integer
-      required:
-        - name
-        - type
-        - utopickey
-        - adminkey
-        - mac
-        - serialnumber
-        - admincounter
-        - timezone
-
-    KeyRequest:
-      type: object
-      properties:
-        userkey:
-          type: string
-          example: deadbeef
-        counter:
-          type: integer
-          example: 1
-        name:
-          type: string
-          example: Admin Key
-        keystatus:
-          type: string
-          example: created
-        usernum:
-          type: string
-          example: U01
-        usernum-id:
-          type: string
-          example: abcdef
-        last-update:
-          type: integer
-      required:
-        - userkey
-        - counter
-        - name
-        - keystatus
-        - usernum
-        - usernum-id
-
-    Device:
-      type: object
-      properties:
-        device_id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-          nullable: true
-        owner_id:
-          type: string
-          format: uuid
-        timezone:
-          type: string
-        type:
-          type: string
-          enum: [DESI]
-        mac:
-          type: string
-        serial_number:
-          type: string
-        admincounter:
-          type: integer
-        devicestatus:
-          type: string
-          enum: [created, no-id]
-        state:
-          type: string
-          enum: [open, close]
-        syncstatus:
-          type: string
-        semi_auto_mode:
-          type: boolean
-        auto_lock_time:
-          type: integer
-        auto_lock_state:
-          type: boolean
-        resbalon:
-          type: integer
-        round_number:
-          type: integer
-        motor_direction:
-          type: integer
-        buzzer_state:
-          type: boolean
-        first_pairing_at:
-          type: string
-          format: date-time
-          nullable: true
-        last_update:
-          type: integer
-        last_sync_attempted_at:
-          type: string
-          format: date-time
-        last_sync_succeeded_at:
-          type: string
-          format: date-time
-          nullable: true
-        utopickey:
-          type: string
-        adminkey:
-          type: string
-        gateways:
-          type: array
-          items:
-            $ref: '#/components/schemas/Gateway'
-
-    Gateway:
-      type: object
-      properties:
-        pairing_id:
-          type: string
-        pair_status:
-          type: string
-        gateway_id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        ble_connection:
-          type: boolean
-        last_connection:
-          type: string
-          format: date-time
-        status:
-          type: string
-        gateway_battery:
-          type: integer
-        power_source:
-          type: string
-        mac:
-          type: string
-
-    Key:
-      type: object
-      properties:
-        key_id:
-          type: string
-          format: uuid
-        role:
-          type: string
-        schedule:
-          type: string
-        phone:
-          type: string
-        key_name:
-          type: string
-        keystatus:
-          type: string
-        type:
-          type: string
-        usernum:
-          type: string
-        usernum_id:
-          type: string
-        schedulestatus:
-          type: string
-        counter:
-          type: integer
-        mine:
-          type: boolean
-        last_update:
-          type: integer
-        user_id:
-          type: string
-          format: uuid
-        device_id:
-          type: string
-          format: uuid
-        display_name:
-          type: string
-        userkey:
-          type: string
-        utopickey:
-          type: string
-
-    BasicResponse:
-      type: object
-      properties:
-        success?:
-          type: boolean
-
-    MissingKey:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        device_id:
-          type: string
-          format: uuid
-        usernum:
-          type: string
-        usernum_id:
-          type: string
-        keystatus:
-          type: string
-        last_update:
-          type: integer
-        type:
-          type: string
-          
-    OtherKey:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        device_id:
-          type: string
-          format: uuid
-        type:
-          type: string
-        name:
-          type: string
-        keystatus:
-          type: string
-        usernum:
-          type: string
-        schedule:
-          type: string
-        schedulestatus:
-          type: string
-        last_update:
-          type: integer
-        usernum_id:
-          type: string
-        
-       
-        
-        
-       
-          
-          
-          
-          
+                success?: false
+                reason: internal-server-error
