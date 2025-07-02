@@ -1,9 +1,0 @@
-type: object
-properties:
-  device:
-    $ref: ./DeviceRequest.yaml
-  key:
-    $ref: ./KeyRequest.yaml
-required:
-  - device
-  - key
