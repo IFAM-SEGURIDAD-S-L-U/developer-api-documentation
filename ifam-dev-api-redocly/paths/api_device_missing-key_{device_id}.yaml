@@ -1,0 +1,23 @@
+get:
+  tags:
+    - Device
+  summary: Get missing keys for device
+  description: >
+    Use this endpoint to get the missing keys of the smartlock with the
+    specified `device_id`.
+  parameters:
+    - name: device_id
+      description: >
+        The `device_id` that was returned by `/api/device/pair/encrypted` when
+        the smartlock was paired.
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      $ref: ../components/responses/getDeviceMissingKeysResponse.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml
+    '403':
+      $ref: ../components/responses/UserNotDeviceUser.yaml

@@ -1,0 +1,25 @@
+delete:
+  tags:
+    - Device
+  summary: Unpair smartlock by ID
+  description: >
+    Use this endpoint to unpair a smartlock, with the specified `device_id`,
+    from the user the user account whose identity is specified in the OpenID
+    Connect ID token used for the request.
+  parameters:
+    - name: device_id
+      description: >
+        The `device_id` that was returned by `/api/device/pair/encrypted` when
+        the smartlock was paired.
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      $ref: ../components/responses/deleteDeviceResponse.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml
+    '403':
+      $ref: ../components/responses/UserNotDeviceUser.yaml

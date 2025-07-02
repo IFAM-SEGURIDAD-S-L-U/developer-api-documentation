@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  device_id:
+    type: string
+    format: uuid
+  usernum:
+    type: string
+  usernum_id:
+    type: string
+  keystatus:
+    type: string
+  last_update:
+    type: integer
+  type:
+    type: string
