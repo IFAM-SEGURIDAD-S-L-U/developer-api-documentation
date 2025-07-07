@@ -37,3 +37,43 @@ paths:
     $ref: paths/api_event_{device_id}.yaml
   /api/event:
     $ref: paths/api_event.yaml
+  /api/gateway/by_mac/{gateway_mac}:
+    $ref: paths/api_gateway_by_mac.yaml
+  /api/gateway/by_pairing_id/{gateway_pairing_id}:
+    $ref: paths/api_gateway_by_pairing_id.yaml
+  /api/gateway/user:
+    $ref: paths/api_gateway_user.yaml
+  /api/gateway/by_id/{gateway_id}:
+    $ref: paths/api_gateway_by_id.yaml
+  /api/gateway/key:
+    post:
+      $ref: paths/api_gateway_key_post.yaml
+    delete:
+      $ref: paths/api_gateway_key_delete.yaml
+  /api/gateway/schedule_key:
+    $ref: paths/api_gateway_schedule_key.yaml
+  /api/gateway/other_key:
+    $ref: paths/api_gateway_other_key.yaml
+  /api/gateway/schedule_other_key:
+    $ref: paths/api_gateway_schedule_other_key.yaml
+  /api/gateway/pair:
+    $ref: paths/api_gateway_pair.yaml
+  /api/gateway/unpair:
+    $ref: paths/api_gateway_unpair.yaml
+  /api/gateway/sync:
+    $ref: paths/api_gateway_sync.yaml
+  /api/gateway/open:
+    $ref: paths/api_gateway_open.yaml
+  /api/gateway/close:
+    $ref: paths/api_gateway_close.yaml
+
+
+
+
+
+
+
+
+
+
+
