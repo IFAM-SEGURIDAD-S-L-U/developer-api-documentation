@@ -14,7 +14,7 @@ paths:
       summary: Check if smartlock is pairable
       requestBody:
         description: |
-          The `serialnumber` value to be used in this endpoint must be the  one that can be found printed in the smartlock box. The  `mac` adress can be found performing the  standard discovery of the lock described in the official documentation. FIXME
+          The `serialnumber` value to be used in this endpoint must be the one that can be found printed in the smartlock box. The `mac` adress can be found performing the standard discovery of the smartlock described in the official documentation. FIXME: Use the link to the official documentation, to the section where the pairing process is described.
         required: true
         content:
           application/json:
@@ -281,7 +281,7 @@ paths:
       requestBody:
         required: true
         description: |
-          `last_bluetooth_connection` contains the timestamp of the last Bluetooth connection to the device, in milliseconds since epoch. This is used to determine if the device has been recently connected. (FIXME for the documentation of syntax for `device_keys` with Usoa).
+          `last_bluetooth_connection` contains the timestamp of the last Bluetooth connection to the device, in milliseconds since epoch. This is used to determine if the device has been recently connected.
         content:
           application/json:
             schema:
@@ -327,8 +327,6 @@ paths:
         Use this endpoint to create an event related to an  smartlock, identified by its `device_id`.
       requestBody:
         required: true
-        description: |
-          FIXME(Propiedad por propiedad hay que documentar que significa y cuales son los posibles valores.)
         content:
           application/json:
             schema:
@@ -729,8 +727,6 @@ components:
         - last_bluetooth_connection
     createEventRequest:
       type: object
-      description: |
-        FIXME(Propiedad por propiedad hay que documentar que significa y cuales son los posibles valores.)
       properties:
         created_at:
           type: string
@@ -1327,7 +1323,7 @@ components:
           example:
             success?: true
     checkDeviceKeysResponse:
-      description: Result of device keys verification. Indicates whether the provided keys match those stored in the database for the specified device. If they do not match, the stored keys are synchronized with those sent in the request. (FIXME check with Usoa)
+      description: Result of device keys verification. Indicates whether the provided keys match those stored in the database for the specified device. If they do not match, the keys stored in the database are synchronized with those sent in the request.
       content:
         application/json:
           schema:
