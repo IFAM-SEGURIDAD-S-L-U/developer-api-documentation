@@ -275,7 +275,7 @@ paths:
     post:
       tags:
         - Device
-      summary: Check device keys
+      summary: Check smartlock keys
       description: |
          Use this endpoint to check the smartlock keys, for the smartlock identified by its `device_id` . It verifies that the keys provided in the request match the keys stored in the database for the specified device. And if they do not match, it synchronizes the keys stored in the database with the keys sent in the request.
       requestBody:
@@ -299,17 +299,18 @@ paths:
     get:
       tags:
         - Event
-      summary: Gets all the events from a device.
+      summary: Gets all the events from a smartlock.
       description: |
-        Based on a device-id, returns a list with all the events related to the device-id.
-
-         Note: This endpoint returns a `403 Forbidden` with `reason:
-         user-is-not-device-user` if:
-
-         - The user does not have access to the specified device (or no device is
-         paired).
-         -The device-id is not valid or does not exist.
-
+        Use this endpoint to get all the events for the smartlock identified by `device_id`
+      parameters:
+        - name: device_id
+          description: |
+            The `device_id` that was returned by `/api/device/pair/encrypted` when the smartlock was paired.
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           $ref: '#/components/responses/getEventResponse'
@@ -323,12 +324,11 @@ paths:
         - Event
       summary: Create an event
       description: |
-        Create an event associated to the device ID
-        Note: This endpoint returns a `403 Forbidden` with `reason: user-is-not-device-user` if:
-        - The request body is invalid or missing required fields.
-        - The user does not have access to the specified device (or no device is paired).
+        Use this endpoint to create an event related to an  smartlock, identified by its `device_id`.
       requestBody:
         required: true
+        description: |
+          FIXME(Propiedad por propiedad hay que documentar que significa y cuales son los posibles valores.)
         content:
           application/json:
             schema:
@@ -342,8 +342,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/UserNotDeviceUser'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     pairableRequest:
@@ -731,6 +729,8 @@ components:
         - last_bluetooth_connection
     createEventRequest:
       type: object
+      description: |
+        FIXME(Propiedad por propiedad hay que documentar que significa y cuales son los posibles valores.)
       properties:
         created_at:
           type: string
@@ -743,7 +743,6 @@ components:
         device_id:
           type: string
           format: uuid
-          example: 17fbaba0-3098-44d2-8371-0454693ffb37
         status:
           type: string
           format: enum
@@ -758,8 +757,10 @@ components:
           type: integer
         key_id:
           type: string
+          format: uuid
         other_key_id:
           type: string
+          format: uuid
       required:
         - created_at
         - type
@@ -1357,7 +1358,8 @@ components:
                 key_id: 08f2b690-7648-4dd8-8b59-3067514f288f
                 action: create-missing-key
     getEventResponse:
-      description: Successful response when querying device events
+      description: |
+        Response after attempting to get all the events for the smartlock. If the `success?` key is `true`, then the list of events is returned. If the `success?` key is `false`, it returns the `reason` key with details about the error.
       content:
         application/json:
           examples:
@@ -1367,7 +1369,7 @@ components:
                 success?: true
                 events: []
             withEvents:
-              summary: Device has one associated event
+              summary: Device has one or more associated events
               value:
                 success?: true
                 events:
@@ -1377,8 +1379,15 @@ components:
                     status: completed
                     id: fafab218-d335-42e3-bc32-d1e35151458a
                     created_at: '2025-05-21T12:00:00Z'
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
     createEventResponse:
-      description: Response after creating an event
+      description: |        
+        Response after attempting to create an event for the smartlock. If the `success?` key is `true`, then the created event is returned. If the `success?` key is `false`, it returns the `reason` key with details about the error, including if the event already exists.
       content:
         application/json:
           examples:
@@ -1398,6 +1407,12 @@ components:
               value:
                 success?: false
                 reason: already-exists
+            error:
+              summary: |
+                Connection to the database failed
+              value:
+                success?: false
+                reason: database-connection-failed
     InternalServerError:
       description: Internal server error due to missing `source` field (bug in validation)
       content:
