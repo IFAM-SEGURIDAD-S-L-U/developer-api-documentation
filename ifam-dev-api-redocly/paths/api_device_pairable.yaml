@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Device
+  summary: Check if smartlock is pairable
+  requestBody:
+    description: >
+      The `serialnumber` value to be used in this endpoint must be the one that
+      can be found printed in the smartlock box. The `mac` adress can be found
+      performing the standard discovery of the smartlock described in the
+      official documentation. FIXME: Use the link to the official documentation,
+      to the section where the pairing process is described.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pairableRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/PairableResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

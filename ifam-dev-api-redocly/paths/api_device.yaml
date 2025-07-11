@@ -1,0 +1,25 @@
+put:
+  tags:
+    - Device
+  summary: Update device
+  description: >
+    Use this endpoint to update the smartlock properties using its `id`, that
+    was returned by `/api/device/pair/encrypted` when the smartlock was paired.
+  requestBody:
+    required: true
+    description: >
+      The body is a JSON object that can contain any of the keys defined in the
+      schema.
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/updateDeviceRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/updateDeviceResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml
+    '403':
+      $ref: ../components/responses/UserNotDeviceUser.yaml

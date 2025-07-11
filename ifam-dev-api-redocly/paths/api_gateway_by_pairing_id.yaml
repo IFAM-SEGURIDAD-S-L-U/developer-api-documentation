@@ -1,0 +1,12 @@
+get:
+  tags:
+    - Gateway
+  summary: Get the gateway by the pairing ID
+  description: >
+    Use this endpoint to retrieve the gateway information using its pairing ID.
+
+  responses:
+    '200':
+      $ref: ../components/responses/GatewayByMac.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

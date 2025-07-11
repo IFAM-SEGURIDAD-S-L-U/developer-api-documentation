@@ -1,0 +1,12 @@
+get:
+  tags:
+    - Gateway
+  summary: Get the gateway by the mac address
+  description: >
+    Use this endpoint to retrieve the gateway information using its MAC address.
+
+  responses:
+    '200':
+      $ref: ../components/responses/GatewayByMac.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

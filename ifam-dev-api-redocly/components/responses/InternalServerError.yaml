@@ -1,0 +1,9 @@
+description: Internal server error due to missing `source` field (bug in validation)
+content:
+  application/json:
+    examples:
+      missingSource:
+        summary: Missing `source` field causes server error
+        value:
+          success?: false
+          reason: internal-server-error

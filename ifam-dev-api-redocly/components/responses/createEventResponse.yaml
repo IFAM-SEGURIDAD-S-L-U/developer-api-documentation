@@ -1,0 +1,30 @@
+description: >
+  Response after attempting to create an event for the smartlock. If the
+  `success?` key is `true`, then the created event is returned. If the
+  `success?` key is `false`, it returns the `reason` key with details about the
+  error, including if the event already exists.
+content:
+  application/json:
+    examples:
+      eventCreated:
+        summary: Event successfully created
+        value:
+          success?: true
+          event:
+            device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+            type: open
+            source: device
+            status: failed
+            id: 14a6e4ff-ccac-4945-9cd5-6d9659e10b01
+            created_at: '2025-05-21T12:00:00Z'
+      alreadyExists:
+        summary: Event already exists
+        value:
+          success?: false
+          reason: already-exists
+      error:
+        summary: |
+          Connection to the database failed
+        value:
+          success?: false
+          reason: database-connection-failed

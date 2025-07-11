@@ -1,0 +1,61 @@
+description: >
+  Invalid request. This endpoint uses [Clojure Spec
+  validations](https://clojure.org/guides/spec). The `problems` array contains
+  detailed information about which keys were missing or invalid.  Multiple
+  validation errors can be returned at once, depending on which fields in  the
+  request are invalid.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        problems:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: array
+                items: {}
+              pred:
+                type: array
+                items: {}
+              val:
+                type: object
+              via:
+                type: array
+                items:
+                  type: string
+              in:
+                type: array
+                items: {}
+        spec:
+          type: string
+        value:
+          type: object
+    example:
+      problems:
+        - path: []
+          pred:
+            - clojure.core/fn
+            - '%'
+            - - clojure.core/contains?
+              - '%'
+              - mac
+          val: {}
+          via:
+            - ifam.api.device/device-has-owner?
+          in: []
+        - path: []
+          pred:
+            - clojure.core/fn
+            - '%'
+            - - clojure.core/contains?
+              - '%'
+              - serialnumber
+          val: {}
+          via:
+            - ifam.api.device/device-has-owner?
+          in: []
+      spec: ifam.api.device/device-has-owner?
+      value: {}

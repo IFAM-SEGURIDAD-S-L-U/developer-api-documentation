@@ -1,0 +1,22 @@
+post:
+  tags:
+    - Event
+  summary: Create an event
+  description: >
+    Use this endpoint to create an event related to an  smartlock, identified by
+    its `device_id`.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/createEventRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/createEventResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml
+    '403':
+      $ref: ../components/responses/UserNotDeviceUser.yaml

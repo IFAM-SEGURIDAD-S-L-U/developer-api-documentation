@@ -1,0 +1,63 @@
+description: >
+  Response after attempting to get the list of smartlocks for the current user
+  (encrypted) . If the `success?` key is `true`, then the  `userkey` and
+  `adminkey` values of the smartlocks are returned encrypted with the algorithm
+  described in the developer documentation. FIXME(link,...). If the `success?`
+  key is `false`, it returns the `reason` key with details about the error.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+        devices:
+          type: array
+          items:
+            $ref: ../schemas/Device.yaml
+    examples:
+      noDevices:
+        summary: No devices paired
+        value:
+          success?: true
+          devices: []
+      withDevices:
+        summary: Devices paired
+        value:
+          success?: true
+          devices:
+            - description: local-dev-device-01
+              owner_id: 7f07c031-cbcb-49c3-a4ee-973492db8ef9
+              timezone: Europe/Madrid
+              syncstatus: null
+              admincounter: 15
+              devicestatus: created
+              semi_auto_mode: false
+              first_pairing_at: '2019-10-10T10:00:00Z'
+              name: device-01
+              last_sync_succeeded_at: null
+              day_mode: '0000000000'
+              type: DESI
+              battery: -1
+              state: close
+              round_number: 2
+              gateways: []
+              auto_lock_time: 0
+              last_update: 1746619812243
+              daymodestatus: no-pending-daymode
+              last_sync_attempted_at: null
+              adminkey: >-
+                46a7b179eccd6a4d70304cde9005beea42f7a9c8e2f9a592d83a00c096661ac0e225fcb980ada09e75b80774dfb50641
+              auto_lock_state: true
+              device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+              resbalon: 0
+              motor_direction: 0
+              serial_number: serial-number-1
+              mac: AA:BB:CC:DD:EE:FF
+              utopickey: 15d14e8fef9547a7
+              buzzer_state: false
+      unknownSerial:
+        summary: Serial number not found
+        value:
+          success?: false
+          reason: unkown-serial-number

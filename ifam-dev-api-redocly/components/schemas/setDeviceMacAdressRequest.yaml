@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  mac:
+    type: string
+    example: AA:BB:CC:DD:EE:FF
+required:
+  - id
+  - mac

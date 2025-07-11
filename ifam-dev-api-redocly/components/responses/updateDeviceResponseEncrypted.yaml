@@ -1,0 +1,41 @@
+description: >
+  Response after attempting to update the smartlock properties. If the
+  `success?` key is `true`, then the list of updated properties is returned. If
+  the `userkey` or `adminkey` values of the smartlock have been updated, they
+  will be returned encrypted with the algorithm described in the developer
+  documentation. FIXME(link,...). If the `success?` key is `false`, it returns
+  the `reason` key with details about the error.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+        device:
+          type: object
+          properties:
+            name:
+              type: string
+            last_update:
+              type: integer
+            device_id:
+              type: string
+              format: uuid
+    examples:
+      successful:
+        summary: Device successfully updated
+        value:
+          success: true
+          device:
+            name: Updated Device Name
+            last_update: 1746620109474
+            device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+            userkey: >-
+              e03b784130755b5ae3477051ca8d92a898794856f50be442cb1ebdbea53bdbba90fbefc089e76ef8514540817655b655
+      error:
+        summary: |
+          Connection to the database failed
+        value:
+          success?: false
+          reason: database-connection-failed

@@ -1,0 +1,5 @@
+description: Unauthorized - Missing or invalid OpenID Connect ID token.
+content:
+  application/json:
+    example:
+      error: Authentication required

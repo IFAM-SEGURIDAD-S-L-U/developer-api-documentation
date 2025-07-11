@@ -1,0 +1,57 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  description:
+    type: string
+  state:
+    type: string
+  last-update:
+    type: integer
+  timezone:
+    type: string
+  mac:
+    type: string
+  resbalon:
+    type: integer
+  round-number:
+    type: integer
+  buzzer-state:
+    type: boolean
+  motor-direction:
+    type: integer
+  auto-lock-state:
+    type: boolean
+  auto-lock-time:
+    type: integer
+  semi-auto-mode:
+    type: boolean
+  day-mode:
+    type: string
+  battery:
+    type: integer
+  daymodestatus:
+    type: string
+  syncstatus:
+    type: string
+  syncstatus-error:
+    type: string
+  daymodestatus-error:
+    type: string
+  first-pairing-at:
+    type: string
+    format: date-time
+required:
+  - id
+example:
+  id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+  name: device-01
+  description: local-dev-device-01
+  state: close
+  timezone: Europe/Madrid
+  day-mode: '0000000000'
+  battery: -1
+  daymodestatus: no-pending-daymode
