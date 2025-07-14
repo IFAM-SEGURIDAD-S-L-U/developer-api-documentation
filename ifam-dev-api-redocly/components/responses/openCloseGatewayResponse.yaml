@@ -1,0 +1,36 @@
+description: >
+  Response for synchronizing a smartlock with a gateway. Indicates success or provides error details.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        device_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the smartlock.
+        pair_status:
+          type: string
+          description: Pairing status, if relevant.
+        reason:
+          type: string
+          description: Reason for failure, if any.
+    examples:
+      success:
+          summary: Successful synchronization
+          value:
+          success?: true
+      device_not_paired:
+        summary: Device is not successfully paired yet
+        value:
+          success?: false
+          reason: device_not_successfully_paired_yet
+      action_in_progress:
+        summary: Another gateway action is in progress
+        value:
+          success?: false
+          pair_status: rejected
+          reason: gateway_action_in_progress

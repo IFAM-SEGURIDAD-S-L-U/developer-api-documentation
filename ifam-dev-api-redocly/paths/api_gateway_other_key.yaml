@@ -1,0 +1,17 @@
+delete:
+  tags:
+    - Gateway
+  summary: Delete other key from the gateway
+  description: >
+    Use this endpoint to delete the other key from the gateway. This action will remove the specified key from the gateway's configuration, allowing for a fresh pairing with a new key if necessary.
+  body:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/deleteApiKeyRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/deleteOtherKeyResponse.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

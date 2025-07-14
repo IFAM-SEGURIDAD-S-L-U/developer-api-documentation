@@ -1,0 +1,10 @@
+type: object
+properties:
+  device_id:
+    type: string
+    format: uuid
+  pairing_id:
+    type: string
+    example: 'AABBCCDDEEFF'
+    description: >
+      The pairing ID of the gateway is a MAC address in hexadecimal format. It is used to identify the gateway during the pairing process.

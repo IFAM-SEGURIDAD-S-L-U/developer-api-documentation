@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Gateway
+  summary: Unpair smartlock with gateway
+  description: >
+    Use this endpoint to unpair a smartlock with a gateway. The gateway will be able to control the smartlock and receive events from it.
+
+  requestBody:
+    required: true
+    description: |
+      The body is a JSON object that contains the `gateway_id` of the gateway to be paired and the `device_id` of the smartlock to be paired.
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/unpairGatewayRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/unpairGatewayResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml
+

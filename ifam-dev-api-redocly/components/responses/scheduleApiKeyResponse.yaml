@@ -1,0 +1,64 @@
+description: >
+  Response for scheduling an API key for the gateway. Indicates success or provides error details.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the API key.
+        schedule:
+            type: string
+            pattern: '^[0-9A-F]{2}[0-9]{12}[0-9A]{4}$'
+    examples:
+      success:
+        summary: Successful API Key scheduling
+        value:
+          success?: true
+          id: "123e4567-e89b-12d3-a456-426614174000"
+          schedule: "7F0101000101000000"
+      key_incorrect:
+        summary: Key not found or user has no permission
+        value:
+          success?: false
+          reason: key_incorrect
+      keystatus_wrong:
+        summary: Key is not in created status
+        value:
+          success?: false
+          reason: keystatus_wrong
+      schedulestatus_wrong:
+        summary: Key is already pending schedule
+        value:
+          success?: false
+          reason: schedulestatus_wrong
+      usernum_unknown:
+        summary: Key usernum is unknown
+        value:
+          success?: false
+          reason: usernum_unknown
+      cannot_set_key_as_pending_schedule:
+        summary: Could not set key as pending schedule
+        value:
+          success?: false
+          reason: cannot_set_key_as_pending_schedule
+      cannot_set_key_as_pending_schedule_error:
+        summary: Could not set key as pending schedule error (rollback)
+        value:
+          success?: false
+          reason: cannot_set_key_as_pending_schedule_error
+      cannot_create_task:
+        summary: Could not create the device task
+        value:
+          success?: false
+          reason: cannot_create_task
+      cannot_enqueue_key_schedule_task:
+        summary: Could not enqueue key schedule task
+        value:
+          success?: false
+          reason: cannot_enqueue_key_schedule_task

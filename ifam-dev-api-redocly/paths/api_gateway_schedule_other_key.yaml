@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Gateway
+  summary: Schedule API Gateway other_key
+  description: >
+    Uset this endpoint to schedule an API other_key for the gateway.
+  requestBody:
+    required: true
+    description: |
+        The body is a JSON object that contains the `id` of the key to be scheduled and the schedule time. This key was given
+        when the key was created.
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/shceduleApiKeyRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/scheduleApiOtherKeyResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml
+

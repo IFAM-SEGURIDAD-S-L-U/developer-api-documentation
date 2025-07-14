@@ -1,0 +1,33 @@
+type: object
+properties:
+  device_id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  userkey:
+    type: string
+    format: hex
+    maxLength: 8
+  phone:
+    type: string
+    format: phone
+  role:
+    type: string
+    enum:
+      - guest
+      - admin
+  counter:
+    type: integer
+  id:
+    type: string
+    format: uuid
+  usernumber:
+    type: string
+    pattern: 'U[0-9-fA-F]{2}'
+required:
+  - device_id
+  - name
+  - userkey
+  - phone
+  - role

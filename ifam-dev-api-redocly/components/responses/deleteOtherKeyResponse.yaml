@@ -1,0 +1,58 @@
+description: >
+  Response for deleting an "other" API key from the gateway. Indicates success or provides error details.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the deleted API key.
+        reason:
+          type: string
+          description: The reason for failure, if any.
+    examples:
+      success:
+        summary: Successful "other" API Key deletion
+        value:
+          success?: true
+          id: "123e4567-e89b-12d3-a456-426614174000"
+      key_incorrect:
+        summary: Key not found
+        value:
+          success?: false
+          reason: key_incorrect
+      keystatus_wrong:
+        summary: Key is not in a deletable status
+        value:
+          success?: false
+          reason: keystatus_wrong
+      usernum_unknown:
+        summary: Key usernum is unknown
+        value:
+          success?: false
+          reason: usernum_unknown
+      permission_denied:
+        summary: Insufficient permissions
+        value:
+          success?: false
+          reason: permission_denied
+      cannot_set_key_as_pending_delete:
+        summary: Could not set key as pending delete
+        value:
+          success?: false
+          reason: cannot_set_key_as_pending_delete
+      cannot_create_task:
+        summary: Could not create the device task
+        value:
+          success?: false
+          reason: cannot_create_task
+      cannot_enqueue_key_deletion_task:
+        summary: Could not enqueue key deletion task
+        value:
+          success?: false
+          reason: cannot_enqueue_key_deletion_task

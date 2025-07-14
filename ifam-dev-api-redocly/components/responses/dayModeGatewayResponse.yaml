@@ -1,0 +1,32 @@
+description: >
+  Response for setting day mode on a smartlock via the gateway. Indicates success or provides error details.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        device_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the smartlock.
+        day_mode:
+          type: string
+          description: Applied day mode configuration.
+        reason:
+          type: string
+          description: Reason for failure, if any.
+    examples:
+      success:
+        summary: Day mode set successfully
+        value:
+          success?: true
+          device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+          day_mode: 01234567FF
+      device_not_paired:
+        summary: Device is not successfully paired yet
+        value:
+          success?: false
+          reason: device_not_successfully_paired_yet

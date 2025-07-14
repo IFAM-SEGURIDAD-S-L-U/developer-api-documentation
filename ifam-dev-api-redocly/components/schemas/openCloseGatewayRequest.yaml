@@ -1,0 +1,10 @@
+type: object
+properties:
+  device_id:
+    type: string
+    description: The unique identifier of the smartlock to be opened.
+    format: uuid
+  gateway_id:
+    type: string
+    description: The unique identifier of the gateway that will send the open command to the smartlock.
+    format: uuid

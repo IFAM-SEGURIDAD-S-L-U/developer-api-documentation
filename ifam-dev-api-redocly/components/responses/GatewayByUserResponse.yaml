@@ -1,0 +1,66 @@
+description: >
+  Response after attempting to retrieve information about the gateways associated with the user.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful.
+        gateways:
+        type: array
+        items:
+          type: object
+          properties:
+          description:
+            type: string
+            nullable: true
+          pairing_id:
+            type: string
+            description: Unique identifier for the gateway pairing.
+          pair_status:
+            type: string
+            enum: [paired, unpaired]
+          gateway_id:
+            type: string
+            format: uuid
+          name:
+            type: string
+          battery:
+            type: integer
+          ble_connection:
+            type: boolean
+          last_connection:
+            type: string
+            format: date-time
+          status:
+            type: string
+          power_source:
+            type: string
+          client_id:
+            type: string
+          device_id:
+            type: string
+            format: uuid
+          mac:
+            type: string
+    examples:
+      gatewaysRetrieved:
+        summary: Gateways successfully retrieved
+        value:
+          success?: true
+          gateways:
+            - description: null
+              pairing_id: AABBCCDDEEFF
+              pair_status: paired
+              gateway_id: 1cb310d5-7de4-4f77-a46a-0651100fccee
+              name: gateway-01
+              battery: 0
+              ble_connection: true
+              last_connection: 2022-03-18T15:42:23Z
+              status: online
+              power_source: battery
+              client_id: AABBCCDDEEFF
+              device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
+              mac: AA:BB:CC:DD:EE:FF

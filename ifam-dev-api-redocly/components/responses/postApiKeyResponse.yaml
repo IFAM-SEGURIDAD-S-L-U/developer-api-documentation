@@ -1,0 +1,72 @@
+description: >
+  Response for creating an API key for the gateway. This response indicates
+  whether the operation was successful.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the created API key.
+    examples:
+        success:
+            summary: Successful API Key Creation
+            value:
+            success: true
+            id: "123e4567-e89b-12d3-a456-426614174000"
+        invalid_device_or_gateway:
+          summary: Invalid device or gateway
+          value:
+            success?: false
+            reason: invalid_device_or_gateway
+        permission_denied:
+          summary: Insufficient permissions
+          value:
+            success?: false
+            reason: permission_denied
+        invalid_phone:
+          summary: Invalid phone number
+          value:
+            success?: false
+            reason: invalid_phone
+        cannot_create_key:
+          summary: Could not create the key
+          value:
+            success?: false
+            reason: cannot_create_key
+        key_does_not_exist:
+          summary: The key does not exist
+          value:
+            success?: false
+            reason: key_does_not_exist
+        key_not_in_pending_create_error:
+          summary: The key is not in pending-create-error state
+          value:
+            success?: false
+            reason: key_not_in_pending_create_error
+        cannot_set_key_as_pending_create:
+          summary: Could not set the key as pendingcreate
+          value:
+            success?: false
+            reason: cannot_set_key_as_pending_create
+        cannot_create_task:
+          summary: Could not create the device task
+          value:
+            success?: false
+            reason: cannot_create_task
+        cannot_enqueue_key_creation_task:
+          summary: Could not enqueue key creation task
+          value:
+            success?: false
+            reason: cannot_enqueue_key_creation_task
+        error:
+          summary: |
+            Connection to the database failed
+          value:
+            success?: false
+            reason: database-connection-failed

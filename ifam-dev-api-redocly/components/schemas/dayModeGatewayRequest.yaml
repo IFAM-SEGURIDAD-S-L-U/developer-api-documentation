@@ -1,0 +1,17 @@
+properties:
+    dayMode:
+        type: string
+        pattern: '[0-9]{8}[0-9A-F]{2}'
+        description: |
+          The day mode setting for the gateway, represented as a hexadecimal string. This string encodes the day mode configuration.
+          The format is an 8-digit date followed by a 2-digit hexadecimal value.
+
+    device_id:
+        type: string
+        description: |
+            The unique identifier of the smartlock device that the day mode is being set for. This ID is used to specify which smartlock
+            the gateway should apply the day mode configuration to.
+        format: uuid
+required:
+        - dayMode
+        - device_id

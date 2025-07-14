@@ -1,0 +1,70 @@
+description: >
+  Response after attempting to retrieve the gateway information using its MAC address.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        gateway:
+          type: object
+          properties:
+            description:
+              type: string
+              nullable: true
+              description: Description of the gateway, can be null.
+            pairing_id:
+              type: string
+              description: Unique identifier for the pairing.
+            gateway_id:
+              type: string
+              format: uuid
+              description: Unique identifier for the gateway.
+            name:
+              type: string
+              description: Name of the gateway.
+            battery:
+              type: integer
+              description: Battery level of the gateway.
+            status:
+              type: string
+              enum: [online, offline]
+              description: Current status of the gateway.
+            power_source:
+              type: string
+              enum: [battery, mains]
+              description: Power source of the gateway.
+            client_id:
+              type: string
+              description: Client ID associated with the gateway.
+            mac:
+              type: string
+              format: mac-address
+              description: MAC address of the gateway.
+        reason:
+          type: string
+          nullable: true
+          description: Reason for failure if `success` is false.
+    examples:
+      eventCreated:
+        summary: Gateway successfully retrieved
+        value:
+          success?: true
+          gateway:
+            description: null
+            pairing_id: AABBCCDDEEFF
+            gateway_id: 1cb310d5-7de4-4f77-a46a-0651100fccee
+            name: gateway-01
+            battery: 0
+            status: online
+            power_source: battery
+            client_id: AABBCCDDEEFF
+            mac: AA:BB:CC:DD:EE:FF
+      error:
+        summary: |
+          Connection to the database failed
+        value:
+          success?: false
+          reason: database-connection-failed

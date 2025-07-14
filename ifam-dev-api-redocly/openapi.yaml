@@ -60,6 +60,8 @@ paths:
     $ref: paths/api_gateway_pair.yaml
   /api/gateway/unpair:
     $ref: paths/api_gateway_unpair.yaml
+  /api/gateway/day_mode:
+    $ref: paths/api_gateway_day_mode.yaml
   /api/gateway/sync:
     $ref: paths/api_gateway_sync.yaml
   /api/gateway/open:

@@ -1,0 +1,8 @@
+type: object
+properties:
+  device_id:
+    type: string
+    format: uuid
+  gateway_id:
+    type: string
+    format: uuid

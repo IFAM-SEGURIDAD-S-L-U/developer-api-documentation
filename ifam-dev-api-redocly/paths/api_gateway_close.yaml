@@ -1,0 +1,22 @@
+post:
+  tags:
+    - Gateway
+  summary: Close smartlock with gateway
+  description: >
+    Use this endpoint to close a smartlock via a gateway. The gateway will send the open command to the smartlock.
+
+  requestBody:
+    required: true
+    description: |
+      The body is a JSON object that contains the `device_id` and the `gateway_id` of the smartlock.
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/openCloseGatewayRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/openCloseGatewayResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

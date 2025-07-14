@@ -1,0 +1,22 @@
+tags:
+  - Gateway
+summary: Delete API Gateway Key
+description: >
+  Use this endpoint to delete an existing API key for the gateway.
+requestBody:
+  required: true
+  description: >
+    The body is a JSON object that contains the `id` of the key to be deleted.This key was given
+    when the key was created.
+  content:
+    application/json:
+      schema:
+        $ref: ../components/schemas/deleteApiKeyRequest.yaml
+responses:
+  '200':
+    $ref: ../components/responses/deleteApiKeyResponse.yaml
+  '400':
+    $ref: ../components/responses/BadRequest.yaml
+  '401':
+    $ref: ../components/responses/Unauthorized.yaml
+

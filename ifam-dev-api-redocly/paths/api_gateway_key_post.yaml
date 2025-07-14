@@ -1,0 +1,22 @@
+tags:
+  - Gateway
+summary: Create API Gateway Key
+description: >
+    Use this endpoint to create a new API key for the gateway.
+requestBody:
+  required: true
+  description: >
+    The body is a JSON object that contains the `id` of the gateway and the new
+    `key` to be set.
+  content:
+    application/json:
+      schema:
+        $ref: ../components/schemas/postApiKeyRequest.yaml
+responses:
+  '200':
+    $ref: ../components/responses/postApiKeyResponse.yaml
+  '400':
+    $ref: ../components/responses/BadRequest.yaml
+  '401':
+    $ref: ../components/responses/Unauthorized.yaml
+

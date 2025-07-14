@@ -1,23 +1,13 @@
-description: >
-  Response after attempting to retrieve information about the gateways associated with the user.
-content:
-  application/json:
-    examples:
-      gatewaysRetrieved:
-        summary: Gateways successfully retrieved
-        value:
-          success?: true
-          gateways:
-            - description: null
-              pairing_id: AABBCCDDEEFF
-              pair_status: paired
-              gateway_id: 1cb310d5-7de4-4f77-a46a-0651100fccee
-              name: gateway-01
-              battery: 0
-              ble_connection: true
-              last_connection: 2022-03-18T15:42:23Z
-              status: online
-              power_source: battery
-              client_id: AABBCCDDEEFF
-              device_id: 15d14e8f-ef95-47a7-a3be-3f0daca8aba5
-              mac: AA:BB:CC:DD:EE:FF
+get:
+  tags:
+    - Gateway
+  summary: Get the gateway by user
+  description: >
+    Returns the gateway associated with the user. This endpoint is used to retrieve
+    the gateway information for the currently authenticated user.
+
+  responses:
+    '200':
+      $ref: ../components/responses/GatewayByUserResponse.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

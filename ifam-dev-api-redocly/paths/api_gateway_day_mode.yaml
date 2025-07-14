@@ -1,0 +1,22 @@
+post:
+  tags:
+    - Gateway
+  summary: Set day mode for smartlock with gateway
+  description: >
+    Use this endpoint to set the day mode for a smartlock with a gateway. The gateway will apply the day mode configuration to the smartlock.
+
+  requestBody:
+    required: true
+    description: |
+      The body is a JSON object that contains the `gateway_id` of the gateway and the `device_id` of the smartlock, along with the day mode configuration.
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/dayModeGatewayRequest.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/dayModeGatewayResponse.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

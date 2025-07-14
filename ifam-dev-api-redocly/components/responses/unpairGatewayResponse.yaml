@@ -1,0 +1,40 @@
+description: >
+  Response for unpairing a gateway. Indicates success or provides error details and gateway information if already paired.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        pair_status:
+          type: string
+          description: The current pairing status.
+        reason:
+          type: string
+          description: The reason for failure, if any.
+    examples:
+      success:
+        summary: Unpairing successful
+        value:
+          success?: true
+          pair_status: pairing_started
+          gateway_id: 1cb310d5-7de4-4f77-a46a-0651100fccee
+      gateway_offline:
+        summary: Unpairing successful even if gateway is offline
+        value:
+          success?: true
+          unpair-status: unpaired
+      not_paired:
+        summary: Gateway and device were not paired
+        value:
+          success?: false
+          unpair-status: rejected
+          reason: gateway_and_device_were_not_paired
+      unknown_reason:
+        summary: Unpairing failed for unknown reason
+        value:
+          success?: false
+          unpair-status: rejected
+          reason: unknown_reason

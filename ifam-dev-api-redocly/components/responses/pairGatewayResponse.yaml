@@ -1,0 +1,88 @@
+description: >
+  Response for pairing a gateway. Indicates success or provides error details and gateway information if already paired.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        pair_status:
+          type: string
+          description: The current pairing status.
+        gateway_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the gateway.
+        reason:
+          type: string
+          description: The reason for failure, if any.
+        gateways:
+          type: array
+          description: List of gateways already paired.
+          items:
+            type: object
+            properties:
+              pairing_id:
+                type: string
+                description: The pairing identifier.
+              pair_status:
+                type: string
+                description: The current pairing status.
+              gateway_id:
+                type: string
+                format: uuid
+                description: The unique identifier of the gateway.
+              name:
+                type: string
+                description: The name of the gateway.
+              ble_connection:
+                type: boolean
+                description: Whether BLE connection is active.
+              last_connection:
+                type: string
+                format: date-time
+                description: Last connection timestamp.
+              status:
+                type: string
+                description: Gateway status.
+              gateway_battery:
+                type: integer
+                description: Gateway battery level.
+              power_source:
+                type: string
+                description: Power source of the gateway.
+              mac:
+                type: string
+                description: MAC address of the gateway.
+    examples:
+      success:
+        summary: Pairing started successfully
+        value:
+          success?: true
+          pair_status: pairing_started
+          gateway_id: 1cb310d5-7de4-4f77-a46a-0651100fccee
+      gateway_not_registered:
+        summary: Gateway not registered
+        value:
+          success?: false
+          reason: gateway_not_registered
+          pair_status: rejected
+      already_paired:
+        summary: Gateway and device already paired
+        value:
+          success?: false
+          reason: gateway_and_device_already_paired
+          pair_status: rejected
+          gateways:
+            - pairing_id: AABBCCDDEEFF
+              pair_status: paired
+              gateway_id: 1cb310d5-7de4-4f77-a46a-0651100fccee
+              name: gateway-01
+              ble_connection: true
+              last_connection: 2022-03-18T15:42:23
+              status: online
+              gateway_battery: 0
+              power_source: battery
+              mac: AA:BB:CC:DD:EE:FF

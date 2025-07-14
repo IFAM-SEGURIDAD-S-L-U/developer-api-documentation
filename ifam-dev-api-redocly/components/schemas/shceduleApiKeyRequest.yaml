@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  schedule:
+    type: string
+    pattern: '^[0-9A-F]{2}[0-9]{12}[0-9A]{4}$'

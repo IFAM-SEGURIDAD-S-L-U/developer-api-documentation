@@ -1,0 +1,28 @@
+type: object
+properties:
+  device_id:
+    type: string
+    format: uuid
+  buzzer_state:
+    type: boolean
+    description: >
+      Indicates whether the buzzer should be enabled or disabled during the synchronization process.
+  resbalon:
+    type: natural
+    description: >
+      The resbalon value to be set during the synchronization process. It is a natural number that represents the resbalon setting for the smartlock.
+  motor_direction:
+    type: natural
+    description: >
+        The motor direction to be set during the synchronization process. It is a natural number that represents the motor direction setting for the smartlock.
+  semi_auto_mode:
+    type: boolean
+    description: >
+      Indicates whether the semi-auto mode should be enabled or disabled during the synchronization process.
+  auto_lock_state:
+    type: boolean
+    description: >
+      Indicates whether the auto-lock feature should be enabled or disabled during the synchronization process.
+required:
+  - device_id
+

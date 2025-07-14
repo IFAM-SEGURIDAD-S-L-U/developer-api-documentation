@@ -1,0 +1,13 @@
+get:
+  tags:
+    - Gateway
+  summary: Get the gateway by the id
+  description: >
+    Use this endpoint to retrieve the gateway information using its unique identifier (ID).
+    
+
+  responses:
+    '200':
+      $ref: ../components/responses/GatewayByMacResponse.yaml
+    '401':
+      $ref: ../components/responses/Unauthorized.yaml

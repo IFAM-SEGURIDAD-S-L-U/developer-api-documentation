@@ -1,0 +1,55 @@
+description: >
+  Response for deleting an API key from the gateway. Indicates success or provides error details.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        success?:
+          type: boolean
+          description: Indicates whether the operation was successful.
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the deleted API key.
+        error-result:
+          type: object
+          properties:
+            error-details:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: The reason for failure.
+                reason-details:
+                  type: string
+                  description: Additional error details, if any.
+    examples:
+      success:
+        summary: Successful API Key deletion
+        value:
+          success?: true
+          id: "123e4567-e89b-12d3-a456-426614174000"
+      key_not_found:
+        summary: Key not found
+        value:
+          success?: false
+          error-result:
+            error-details:
+              reason: key-not-found
+      delete_key_error:
+        summary: Error deleting the key
+        value:
+          success?: false
+          error-result:
+            error-details:
+              reason: delete-key-error
+              reason-details: "Database error"
+      update_device_error:
+        summary: Error updating the device
+        value:
+          success?: false
+          error-result:
+            error-details:
+              reason: update-device-error
+              reason-details: "Device not reachable"
